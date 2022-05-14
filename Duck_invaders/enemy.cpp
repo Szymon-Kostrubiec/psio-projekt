@@ -1,12 +1,18 @@
 #include "enemy.hpp"
 
-Enemy::Enemy(uint16_t startX, uint16_t startY, uint16_t velX, uint16_t velY, uint8_t health) :
-    GameObject(startX, startY), m_health(health), m_velX(velX), m_velY(velY)
+Enemy::Enemy(uint16_t startX, uint16_t startY) :
+    GameObject(startX, startY)
 {
     loadTextures();
 }
 
-void Enemy::gameTick(sf::RenderWindow *host, float deltaTime)
+Enemy::Enemy(uint16_t startX, uint16_t startY, uint16_t velX, uint16_t velY, uint8_t health) :
+    GameObject(startX, startY), m_velX(velX), m_velY(velY), m_health(health)
+{
+    loadTextures();
+}
+
+void Enemy::gameTick([[maybe_unused]] GameMaster *host, float deltaTime)
 {
     calculateMovement(deltaTime);
     animate();

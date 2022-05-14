@@ -11,8 +11,9 @@ static constexpr int animationFrequency = 2000;
 class Enemy: public GameObject
 {
 public:
+    explicit Enemy(uint16_t startX, uint16_t startY);
     explicit Enemy(uint16_t startX, uint16_t startY, uint16_t velX, uint16_t velY, uint8_t health);
-    void gameTick(sf::RenderWindow *host, float deltaTime) override;
+    void gameTick(GameMaster *host, float deltaTime) override;
 
 private:
     void loadTextures();
@@ -24,5 +25,7 @@ private:
 
     std::array<sf::Texture, 2> textures;
     State state;
+
+    friend class EnemyBuilder;
 };
 

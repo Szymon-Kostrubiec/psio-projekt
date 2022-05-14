@@ -28,7 +28,7 @@ ui_*.h
 *.qmlc
 *.jsc
 Makefile*
-*build-*
+*build*
 *.qm
 *.prl
 
@@ -47,6 +47,7 @@ CMakeLists.txt.user*
 
 # QtCreator 4.8< compilation database 
 compile_commands.json
+.qtc_clangd/*
 
 # QtCreator local machine specific files for imported projects
 *creator.user*

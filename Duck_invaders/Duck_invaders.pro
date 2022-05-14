@@ -11,13 +11,15 @@ LIBS += -lsfml-system
 
 SOURCES += \
         enemy.cpp \
-        gamewindow.cpp \
+        gamemaster.cpp \
         hero.cpp \
         main.cpp
 
 HEADERS += \
+    Text.hpp \
     enemy.hpp \
-    enemyspawner.hpp \
+    enemybuilder.hpp \
     gameObject.hpp \
-    gamewindow.hpp \
+    gamemaster.hpp \
+    globals.hpp \
     hero.hpp

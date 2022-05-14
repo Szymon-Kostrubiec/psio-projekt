@@ -3,9 +3,11 @@
 #include <SFML/Graphics.hpp>
 #include <cstdint>
 
+class GameMaster;
+
 class GameObject: public sf::Sprite {
 public:
-    virtual void gameTick(sf::RenderWindow * host, float deltaTime) = 0;
+    virtual void gameTick(GameMaster * host, float deltaTime) = 0;
 
 protected:
     GameObject(uint16_t startPosX, uint16_t startPosY) : //check the types
