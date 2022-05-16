@@ -21,7 +21,9 @@ private:
     void calculateMovement(float deltaTime) override;
     uint8_t m_health;
 
-    uint16_t m_velX, m_velY;
+    int16_t m_velX, m_velY;
+    uint16_t m_boundXlow, m_boundXhi;
+    uint16_t m_boundYlow, m_boundYhi;
 
     std::array<sf::Texture, 2> textures;
     State state;

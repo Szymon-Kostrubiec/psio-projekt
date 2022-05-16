@@ -7,9 +7,13 @@ Enemy::Enemy(uint16_t startX, uint16_t startY) :
 }
 
 Enemy::Enemy(uint16_t startX, uint16_t startY, uint16_t velX, uint16_t velY, uint8_t health) :
-    GameObject(startX, startY), m_velX(velX), m_velY(velY), m_health(health)
+    GameObject(startX, startY), m_health(health), m_velX(velX), m_velY(velY)
 {
     loadTextures();
+    m_boundXlow = 100;
+    m_boundXhi = 600;
+    m_boundYhi = 400;
+    m_boundYhi = 0;
 }
 
 void Enemy::gameTick([[maybe_unused]] GameMaster *host, float deltaTime)
@@ -48,5 +52,16 @@ void Enemy::calculateMovement(float deltaTime)
 {
     m_posX += deltaTime * m_velX;
     m_posY += deltaTime * m_velY;
+
+    if (m_posX > m_boundXhi)
+        m_velX = -std::abs(m_velX);
+    else if (m_posX < m_boundXlow)
+        m_velX = std::abs(m_velX);
+
+    if (m_posY > m_boundYhi)
+        m_velY = -std::abs(m_velY);
+    else if (m_posY < m_boundYlow)
+        m_velY = std::abs(m_velY);
+
     setPosition(m_posX, m_posY);
 }

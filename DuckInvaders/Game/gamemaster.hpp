@@ -5,7 +5,7 @@
 #include <memory>
 #include <algorithm>
 #include "gameObject.hpp"
-#include "globals.hpp"
+#include "utility.hpp"
 #include "Text.hpp"
 
 #define debug
@@ -15,7 +15,9 @@
 #include "hero.hpp"
 #endif
 
-extern uint32_t Game::globalTime;
+namespace Game{
+extern uint32_t globalTime;
+}
 
 class GameMaster
 {
@@ -31,5 +33,6 @@ private:
     std::list<std::shared_ptr<Game::Text>> m_textObjects;
     sf::RenderWindow m_window;
     sf::Sprite background;
+    sf::Texture backgroundTexture;
 };
 

@@ -3,7 +3,6 @@
 GameMaster::GameMaster(uint16_t windowSizeX, uint16_t windowSizeY):
     m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders")
 {
-    sf::Texture backgroundTexture;
     backgroundTexture.loadFromFile("Textures/background.png");
     backgroundTexture.setRepeated(true);
     background.setTexture(backgroundTexture);
@@ -23,6 +22,7 @@ void GameMaster::addText(std::shared_ptr<Game::Text> textObj)
 void GameMaster::enterGameLoop()
 {
     sf::Clock fpsClock;
+    sf::Clock gameClock;
     while (m_window.isOpen()) {
 
         sf::Event event;
@@ -36,10 +36,11 @@ void GameMaster::enterGameLoop()
 
         m_window.clear(sf::Color::Black);
         m_window.draw(background);
+
         //update global timers and get fps data
         const auto time = fpsClock.restart();
         const auto deltaTime = time.asSeconds();
-        Game::globalTime = time.asMilliseconds();
+//        Game::globalTime = gameClock.getElapsedTime().asMilliseconds();
 
         //let every game object perform a tick
         for (auto const &obj: m_objects) {
@@ -60,6 +61,7 @@ void GameMaster::enterGameLoop()
 
 void GameMaster::removeMe(GameObject *toBeDeleted)
 {
+    std::cout << "Removed an object";
     std::remove_if(m_objects.begin(), m_objects.end(), [toBeDeleted](std::shared_ptr<GameObject> const &obj){
         return obj.get() == toBeDeleted;    //fast comparisons of pointers, not data
     });
