@@ -14,8 +14,9 @@ public:
     Projectile(uint16_t posX, uint16_t posY, uint16_t velX, uint16_t velY, ProjectileLevel level);
     void gameTick(GameEngine * host, float deltaTime) override;
     void calculateMovement(float deltaTime) override;
+    uint8_t damagePotential() const {return m_damagePotential;}
 private:
-    int8_t m_damagePotential;
+    uint8_t m_damagePotential;
     int16_t m_velX, m_velY;
     sf::Texture m_texture;
 };

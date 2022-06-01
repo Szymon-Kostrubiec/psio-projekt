@@ -2,14 +2,13 @@
 
 #include <QLabel>
 #include <QDialog>
-#include <Game/gameengine.hpp>
+#include "Game/gameengine.hpp"
+#include "Game/utility.hpp"
 #include "displayplayer.h"
 
 namespace Ui {
 class CharacterChoice;
 }
-
-enum class Difficulty: uint8_t {Easy, Medium, Hard};
 
 class CharacterChoice : public QDialog
 {

@@ -18,28 +18,31 @@ SOURCES += \
     Game/enemy.cpp \
     Game/gameengine.cpp \
     Game/hero.cpp \
+  Game/movement.cpp \
     Game/projectile.cpp \
     Game/texturemanager.cpp \
+  Game/utility.cpp \
     characterchoice.cpp \
     creditswindow.cpp \
     displayplayer.cpp \
     main.cpp \
-    mainwindow.cpp \
+    mainwindow.cpp
 
 HEADERS += \
     Game/Text.hpp \
     Game/enemy.hpp \
-    Game/enemybuilder.hpp \
     Game/gameObject.hpp \
     Game/gameengine.hpp \
     Game/hero.hpp \
+  Game/loader.hpp \
+  Game/movement.hpp \
     Game/projectile.hpp \
     Game/texturemanager.h \
     Game/utility.hpp \
     characterchoice.hpp \
     creditswindow.hpp \
     displayplayer.h \
-    mainwindow.hpp \
+    mainwindow.hpp
 
 FORMS += \
     characterchoice.ui \

@@ -1,0 +1,4 @@
+startX,startY,EnemyHP,ProjectileDamagePotential,ProjectileSpeed
+Type of Motion, coefficients
+300,300,50,20,20
+Polynomial,

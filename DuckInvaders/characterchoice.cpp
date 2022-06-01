@@ -21,13 +21,7 @@ CharacterChoice::~CharacterChoice()
 void CharacterChoice::on_play_clicked()
 {
     this->hide();
-    GameEngine game(1000, 800);
-
-    //game setup
-    auto health = 750 - 250 * static_cast<uint16_t>(m_difficulty);
-
-    auto hero = std::make_shared<Hero>(500, 300, health, displayPlayer->getCurrent());
-    game.addObject(hero);
+    GameEngine game(1000, 800, m_difficulty, displayPlayer->getCurrent());
     game.enterGameLoop();
     this->show();
 }

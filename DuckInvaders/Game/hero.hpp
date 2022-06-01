@@ -9,12 +9,14 @@
 class Hero: public GameObject
 {
 public:
-    Hero(uint16_t posX, uint16_t posY, uint16_t health, std::string const &playerFileName);
-    void gameTick(GameEngine * host, float deltaTime) override;
+    Hero(GameEngine * host, uint16_t posX, uint16_t posY, uint16_t health, std::string const &playerFileName);
+    void gameTick(float deltaTime) override;
+    int16_t health() const;
+    void decreaseHealth(uint16_t amount);
+
 private:
-    void calculateMovement(float deltaTime) override;
     void calculateShots(GameEngine * host);
-    uint16_t m_health;
+    int16_t m_health;
     sf::Texture m_texture;
     static constexpr uint16_t heroSpeed{200};
     ProjectileLevel m_currentProjectileLevel;

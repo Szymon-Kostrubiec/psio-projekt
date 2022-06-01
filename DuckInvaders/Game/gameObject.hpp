@@ -7,14 +7,14 @@ class GameEngine;
 
 class GameObject: public sf::Sprite {
 public:
-    virtual void gameTick(GameEngine * host, float deltaTime) = 0;
-
-protected:
-    GameObject(uint16_t startPosX, uint16_t startPosY) : //check the types
-        m_posX(startPosX), m_posY(startPosY) {
-    }
+    virtual void gameTick(float deltaTime) = 0;
     virtual ~GameObject() {}
-    virtual void calculateMovement(float deltaTime) = 0; //todo
+protected:
+    GameObject(GameEngine * host, float startPosX, float startPosY) :
+        m_posX(startPosX), m_posY(startPosY), host(host) {
+        setPosition(m_posX, m_posY);
+    }
     float m_posX, m_posY;
     sf::Texture m_texture;
+    GameEngine * host;
 };

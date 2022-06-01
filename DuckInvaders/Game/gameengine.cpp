@@ -1,22 +1,25 @@
 #include "gameengine.hpp"
 
-GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY):
-    m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders")
+GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY, Difficulty diff, std::string const &heroTex):
+    m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders"), gameDifficulty(diff)
 {
     backgroundTexture.loadFromFile("Textures/background.png");
     backgroundTexture.setRepeated(true);
     background.setTexture(backgroundTexture);
     background.setTextureRect(sf::IntRect(0, 0, windowSizeX, windowSizeY));
+
+    auto health = 750 - 250 * static_cast<int>(gameDifficulty);
+    m_hero = std::make_shared<Hero>(windowSizeX/2, windowSizeY/2, health, heroTex);
 }
 
-void GameEngine::addObject(std::shared_ptr<GameObject> newObject)
+void GameEngine::addObject(std::unique_ptr<GameObject> &&newObject)
 {
-    m_objects.emplace_back(newObject);
+    m_objects.emplace_back(std::move(newObject));
 }
 
-void GameEngine::addText(std::shared_ptr<Game::Text> textObj)
+void GameEngine::addText(std::unique_ptr<Game::Text> &&textObj)
 {
-    m_textObjects.emplace_back(textObj);
+    m_textObjects.emplace_back(std::move(textObj));
 }
 
 void GameEngine::enterGameLoop()
@@ -40,9 +43,11 @@ void GameEngine::enterGameLoop()
         //update global timers and get fps data
         const auto time = fpsClock.restart();
         const auto deltaTime = time.asSeconds();
-//        Game::globalTime = gameClock.getElapsedTime().asMilliseconds();
+
+        collisionsEngine();
 
         //let every game object perform a tick
+        m_hero->gameTick(this, deltaTime);
         for (auto const &obj: m_objects) {
             obj->gameTick(this, deltaTime);
         }
@@ -59,17 +64,19 @@ void GameEngine::enterGameLoop()
     }
 }
 
-void GameEngine::removeMe(GameObject *toBeDeleted)
+void GameEngine::collisionsEngine()
 {
-    std::cout << "Removed an object";
-    std::remove_if(m_objects.begin(), m_objects.end(), [toBeDeleted](std::shared_ptr<GameObject> const &obj){
-        return obj.get() == toBeDeleted;    //fast comparisons of pointers, not data
-    });
+    for (auto const &obj: m_objects) {
+
+        if (obj->getGlobalBounds().intersects(m_hero->getGlobalBounds())) {
+
+            if (auto duck = dynamic_cast<Enemy *>(obj.get())) {
+
+            }
+            else if (auto projectile = dynamic_cast<Projectile *>(obj.get())) {
+                m_hero->decreaseHealth(projectile->damagePotential());
+            }
+        }
+    }
 }
 
-void GameEngine::removeMe(Game::Text *toBeDeleted)
-{
-    std::remove_if(m_textObjects.begin(), m_textObjects.end(), [toBeDeleted](std::shared_ptr<Game::Text> const &obj){
-        return obj.get() == toBeDeleted;
-    });
-}
