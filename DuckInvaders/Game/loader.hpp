@@ -1,11 +1,14 @@
 #pragma once
 
+#include <memory>
+#include <fstream>
+#include <array>
+#include "projectile.hpp"
 #include "enemy.hpp"
 
-class EnemyLoader{
+namespace Game {
 
-};
+std::vector<std::shared_ptr<Enemy>> getEnemies(Level level);
 
-class ProjectileLoader {
-
-};
+std::vector<std::shared_ptr<Projectile>> getProjectile(Difficulty difficulty, Level level);
+}

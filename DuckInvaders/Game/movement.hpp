@@ -8,7 +8,7 @@ class MovementCalc {
   explicit MovementCalc(float startX, float startY)
       : m_lastX(startX), m_lastY(startY) {}
 
-  virtual sf::Vector2f getNextPosition(float step);
+  virtual sf::Vector2f getNextPosition(float step) = 0;
 
  protected:
   mutable float m_lastX;

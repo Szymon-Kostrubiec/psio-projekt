@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include "utility.hpp"
 #include "gameObject.hpp"
 #include "movement.hpp"
 
@@ -9,6 +10,7 @@ enum class State : uint8_t {Idle1, Idle2, AboutToFire, Dead};
 //params
 static constexpr int animationFrequency = 2000;
 
+enum class Level : uint8_t {Level1, Level2, Level3, Level4, Level5};
 
 class Enemy: public GameObject
 {

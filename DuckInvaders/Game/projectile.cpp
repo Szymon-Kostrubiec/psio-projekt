@@ -1,7 +1,7 @@
 #include "projectile.hpp"
 
-Projectile::Projectile(uint16_t posX, uint16_t posY, uint16_t velX, uint16_t velY, ProjectileLevel level) :
-    GameObject(posX, posY), m_velX(velX), m_velY(velY)
+Projectile::Projectile(GameEngine * host, uint16_t posX, uint16_t posY, uint16_t velX, uint16_t velY, ProjectileLevel level) :
+    GameObject(host, posX, posY), m_velX(velX), m_velY(velY)
 {
     m_damagePotential = damagePotentials.at(static_cast<uint8_t>(level));
     m_texture.loadFromFile("Textures/" + projectileFileNames.at(static_cast<uint8_t>(level)));
@@ -9,7 +9,7 @@ Projectile::Projectile(uint16_t posX, uint16_t posY, uint16_t velX, uint16_t vel
     setRotation(-90);
 }
 
-void Projectile::gameTick(GameEngine *host, float deltaTime)
+void Projectile::gameTick(float deltaTime)
 {
     calculateMovement(deltaTime);
 

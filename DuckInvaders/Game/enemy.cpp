@@ -5,7 +5,7 @@ uint32_t globalTime;
 }
 
 Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY) :
-    GameObject(startX, startY), projectileTimeout(1000), lastProjectileFired(0)
+    GameObject(host, startX, startY), projectileTimeout(1000), lastProjectileFired(0)
 {
     loadTextures();
 }
@@ -58,7 +58,7 @@ void Enemy::spawnProjectile()
         lastProjectileFired = Game::globalTime;
 
         if (randomDouble(1.0) < projectileChance) {
-            auto projectile =
+            auto projectile = 1;
         }
 
     }

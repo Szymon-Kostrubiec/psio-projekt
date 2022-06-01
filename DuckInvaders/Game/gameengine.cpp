@@ -1,7 +1,7 @@
 #include "gameengine.hpp"
 
 GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY, Difficulty diff, std::string const &heroTex):
-    m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders"), gameDifficulty(diff)
+    gameDifficulty(diff), m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders")
 {
     backgroundTexture.loadFromFile("Textures/background.png");
     backgroundTexture.setRepeated(true);
@@ -9,7 +9,7 @@ GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY, Difficulty di
     background.setTextureRect(sf::IntRect(0, 0, windowSizeX, windowSizeY));
 
     auto health = 750 - 250 * static_cast<int>(gameDifficulty);
-    m_hero = std::make_shared<Hero>(windowSizeX/2, windowSizeY/2, health, heroTex);
+    m_hero = std::make_shared<Hero>(this, windowSizeX/2, windowSizeY/2, health, heroTex);
 }
 
 void GameEngine::addObject(std::unique_ptr<GameObject> &&newObject)
@@ -47,9 +47,9 @@ void GameEngine::enterGameLoop()
         collisionsEngine();
 
         //let every game object perform a tick
-        m_hero->gameTick(this, deltaTime);
+        m_hero->gameTick(deltaTime);
         for (auto const &obj: m_objects) {
-            obj->gameTick(this, deltaTime);
+            obj->gameTick(deltaTime);
         }
         //draw every game object
         for (auto const &obj: m_objects) {

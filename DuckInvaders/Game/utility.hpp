@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <random>
 
 enum class ProjectileLevel: uint8_t {Level1, Level2, Level3, Level4};
 enum class Difficulty: uint8_t {Easy, Medium, Hard};

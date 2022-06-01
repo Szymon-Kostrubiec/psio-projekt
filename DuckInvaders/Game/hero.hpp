@@ -6,6 +6,8 @@
 #include "utility.hpp"
 #include "texturemanager.h"
 
+enum class Direction{Left, Up, Right};
+
 class Hero: public GameObject
 {
 public:
@@ -15,6 +17,8 @@ public:
     void decreaseHealth(uint16_t amount);
 
 private:
+    void animate();
+    void calculateMovement(float);
     void calculateShots(GameEngine * host);
     int16_t m_health;
     sf::Texture m_texture;
