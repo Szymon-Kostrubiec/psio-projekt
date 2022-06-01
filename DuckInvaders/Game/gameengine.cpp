@@ -1,6 +1,6 @@
-#include "gamemaster.hpp"
+#include "gameengine.hpp"
 
-GameMaster::GameMaster(uint16_t windowSizeX, uint16_t windowSizeY):
+GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY):
     m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders")
 {
     backgroundTexture.loadFromFile("Textures/background.png");
@@ -9,17 +9,17 @@ GameMaster::GameMaster(uint16_t windowSizeX, uint16_t windowSizeY):
     background.setTextureRect(sf::IntRect(0, 0, windowSizeX, windowSizeY));
 }
 
-void GameMaster::addObject(std::shared_ptr<GameObject> newObject)
+void GameEngine::addObject(std::shared_ptr<GameObject> newObject)
 {
     m_objects.emplace_back(newObject);
 }
 
-void GameMaster::addText(std::shared_ptr<Game::Text> textObj)
+void GameEngine::addText(std::shared_ptr<Game::Text> textObj)
 {
     m_textObjects.emplace_back(textObj);
 }
 
-void GameMaster::enterGameLoop()
+void GameEngine::enterGameLoop()
 {
     sf::Clock fpsClock;
     sf::Clock gameClock;
@@ -59,7 +59,7 @@ void GameMaster::enterGameLoop()
     }
 }
 
-void GameMaster::removeMe(GameObject *toBeDeleted)
+void GameEngine::removeMe(GameObject *toBeDeleted)
 {
     std::cout << "Removed an object";
     std::remove_if(m_objects.begin(), m_objects.end(), [toBeDeleted](std::shared_ptr<GameObject> const &obj){
@@ -67,7 +67,7 @@ void GameMaster::removeMe(GameObject *toBeDeleted)
     });
 }
 
-void GameMaster::removeMe(Game::Text *toBeDeleted)
+void GameEngine::removeMe(Game::Text *toBeDeleted)
 {
     std::remove_if(m_textObjects.begin(), m_textObjects.end(), [toBeDeleted](std::shared_ptr<Game::Text> const &obj){
         return obj.get() == toBeDeleted;

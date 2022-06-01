@@ -39,16 +39,6 @@
     <string>&gt;</string>
    </property>
   </widget>
-  <widget class="QGraphicsView" name="graphicsView">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>301</width>
-     <height>291</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QPushButton" name="easy">
    <property name="geometry">
     <rect>
@@ -99,6 +89,16 @@
    </property>
    <property name="text">
     <string>Play</string>
+   </property>
+  </widget>
+  <widget class="QGraphicsView" name="viewPlayer">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>331</width>
+     <height>291</height>
+    </rect>
    </property>
   </widget>
  </widget>

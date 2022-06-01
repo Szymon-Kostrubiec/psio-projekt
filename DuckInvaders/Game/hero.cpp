@@ -1,13 +1,12 @@
 #include "hero.hpp"
 
-Hero::Hero(uint16_t posX, uint16_t posY, uint16_t health) :
+Hero::Hero(uint16_t posX, uint16_t posY, uint16_t health, const std::string &playerFileName) :
     GameObject(posX, posY), m_health(health), m_currentProjectileLevel(ProjectileLevel::Level1)
 {
-    loadTextures();
-    setPosition(posX, posY);
+
 }
 
-void Hero::gameTick([[maybe_unused]] GameMaster *host, float deltaTime)
+void Hero::gameTick([[maybe_unused]] GameEngine *host, float deltaTime)
 {
    //todo: taking and receiving shots
     calculateMovement(deltaTime);
@@ -31,7 +30,7 @@ void Hero::calculateMovement(float deltaTime)
     setPosition(m_posX, m_posY);
 }
 
-void Hero::calculateShots(GameMaster *host)
+void Hero::calculateShots(GameEngine *host)
 {
     if (not sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         return;
@@ -43,8 +42,3 @@ void Hero::calculateShots(GameMaster *host)
 //    }
 }
 
-void Hero::loadTextures()
-{
-    m_texture.loadFromFile("Textures/spaceship.png");
-    setTexture(m_texture);
-}

@@ -9,7 +9,7 @@ Projectile::Projectile(uint16_t posX, uint16_t posY, uint16_t velX, uint16_t vel
     setRotation(-90);
 }
 
-void Projectile::gameTick(GameMaster *host, float deltaTime)
+void Projectile::gameTick(GameEngine *host, float deltaTime)
 {
     calculateMovement(deltaTime);
 

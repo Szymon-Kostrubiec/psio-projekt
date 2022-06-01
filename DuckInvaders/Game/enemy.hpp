@@ -13,7 +13,7 @@ class Enemy: public GameObject
 public:
     explicit Enemy(uint16_t startX, uint16_t startY);
     explicit Enemy(uint16_t startX, uint16_t startY, uint16_t velX, uint16_t velY, uint8_t health);
-    void gameTick(GameMaster *host, float deltaTime) override;
+    void gameTick(GameEngine *host, float deltaTime) override;
 
 private:
     void loadTextures();

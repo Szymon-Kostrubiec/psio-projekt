@@ -16,7 +16,7 @@ Enemy::Enemy(uint16_t startX, uint16_t startY, uint16_t velX, uint16_t velY, uin
     m_boundYhi = 0;
 }
 
-void Enemy::gameTick([[maybe_unused]] GameMaster *host, float deltaTime)
+void Enemy::gameTick([[maybe_unused]] GameEngine *host, float deltaTime)
 {
     calculateMovement(deltaTime);
     animate();

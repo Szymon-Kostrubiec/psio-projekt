@@ -2,7 +2,8 @@
 
 #include <QLabel>
 #include <QDialog>
-#include <Game/gamemaster.hpp>
+#include <Game/gameengine.hpp>
+#include "displayplayer.h"
 
 namespace Ui {
 class CharacterChoice;
@@ -27,11 +28,16 @@ private slots:
 
     void on_hard_clicked();
 
+    void on_left_clicked();
+
+    void on_right_clicked();
+
 private:
     void clearButtons();
 
     Ui::CharacterChoice *ui;
     Difficulty m_difficulty;
     QList<QPushButton *> m_labels;
+    DisplayPlayer * displayPlayer;
 };
 

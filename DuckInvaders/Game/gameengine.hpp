@@ -19,10 +19,10 @@ namespace Game{
 extern uint32_t globalTime;
 }
 
-class GameMaster
+class GameEngine
 {
 public:
-    explicit GameMaster(uint16_t windowSizeX, uint16_t windowSizeY);
+    explicit GameEngine(uint16_t windowSizeX, uint16_t windowSizeY);
     void addObject(std::shared_ptr<GameObject> newObject);
     void addText(std::shared_ptr<Game::Text> textObj);
     void enterGameLoop();

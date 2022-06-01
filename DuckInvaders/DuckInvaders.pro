@@ -16,26 +16,30 @@ LIBS += -lsfml-system
 
 SOURCES += \
     Game/enemy.cpp \
-    Game/gamemaster.cpp \
+    Game/gameengine.cpp \
     Game/hero.cpp \
     Game/projectile.cpp \
+    Game/texturemanager.cpp \
     characterchoice.cpp \
     creditswindow.cpp \
+    displayplayer.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
 
 HEADERS += \
     Game/Text.hpp \
     Game/enemy.hpp \
     Game/enemybuilder.hpp \
     Game/gameObject.hpp \
-    Game/gamemaster.hpp \
+    Game/gameengine.hpp \
     Game/hero.hpp \
     Game/projectile.hpp \
+    Game/texturemanager.h \
     Game/utility.hpp \
     characterchoice.hpp \
     creditswindow.hpp \
-    mainwindow.hpp
+    displayplayer.h \
+    mainwindow.hpp \
 
 FORMS += \
     characterchoice.ui \

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gameObject.hpp"
-#include "gamemaster.hpp"
+#include "gameengine.hpp"
 #include "utility.hpp"
 
 static const std::array<std::string, 4> projectileFileNames{"Projectile1.png", "Projectile2.png", "Projectile3.png",
@@ -12,7 +12,7 @@ class Projectile : public GameObject
 {
 public:
     Projectile(uint16_t posX, uint16_t posY, uint16_t velX, uint16_t velY, ProjectileLevel level);
-    void gameTick(GameMaster * host, float deltaTime) override;
+    void gameTick(GameEngine * host, float deltaTime) override;
     void calculateMovement(float deltaTime) override;
 private:
     int8_t m_damagePotential;
