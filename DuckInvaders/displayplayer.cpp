@@ -26,4 +26,5 @@ void DisplayPlayer::changePlayer(int8_t amount)
     delete pixMapDisplayed;
     pixMapDisplayed = new QGraphicsPixmapItem(QPixmap(QString::fromStdString(playerFileNames.at(currentPlayer))));
     addItem(pixMapDisplayed);
+    pixMapDisplayed->setScale(20);
 }

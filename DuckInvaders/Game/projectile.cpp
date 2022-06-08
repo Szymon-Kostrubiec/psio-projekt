@@ -1,6 +1,6 @@
 #include "projectile.hpp"
 
-Projectile::Projectile(GameEngine * host, uint16_t posX, uint16_t posY, uint16_t velX, uint16_t velY, ProjectileLevel level) :
+Projectile::Projectile(GameEngine * host, uint16_t posX, uint16_t posY, uint16_t velX, uint16_t velY, ProjectileLevel level, Type type) :
     GameObject(host, posX, posY), m_velX(velX), m_velY(velY)
 {
     m_damagePotential = damagePotentials.at(static_cast<uint8_t>(level));

@@ -4,7 +4,7 @@
 #include "gameengine.hpp"
 #include "projectile.hpp"
 #include "utility.hpp"
-#include "texturemanager.h"
+#include "managers.h"
 
 enum class Direction{Left, Up, Right};
 
@@ -19,9 +19,12 @@ public:
 private:
     void animate();
     void calculateMovement(float);
-    void calculateShots(GameEngine * host);
+    void fire();
+    uint32_t lastFired;
+    static constexpr auto firingCooldown = 500;
     int16_t m_health;
     sf::Texture m_texture;
+    static const std::array<sf::IntRect, 3> m_texRects;
     static constexpr uint16_t heroSpeed{200};
     ProjectileLevel m_currentProjectileLevel;
     uint32_t m_firingCooldown;

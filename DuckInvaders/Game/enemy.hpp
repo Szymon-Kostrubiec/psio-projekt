@@ -5,6 +5,7 @@
 #include "utility.hpp"
 #include "gameObject.hpp"
 #include "movement.hpp"
+#include "projectile.hpp"
 
 enum class State : uint8_t {Idle1, Idle2, AboutToFire, Dead};
 //params
@@ -17,6 +18,7 @@ class Enemy: public GameObject
 public:
     explicit Enemy(GameEngine * host, uint16_t startX, uint16_t startY);
     void gameTick(float deltaTime) override;
+    void die();
 
 private:
     void loadTextures();
@@ -30,6 +32,7 @@ private:
     std::array<sf::Texture, 2> textures;
     sf::Texture textureDead;
     State state;
+    uint32_t timeOfDeath;
 
     std::unique_ptr<MovementCalc> movement;
     int16_t m_vel;

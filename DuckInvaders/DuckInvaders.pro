@@ -19,9 +19,9 @@ SOURCES += \
     Game/gameengine.cpp \
     Game/hero.cpp \
   Game/loader.cpp \
+  Game/managers.cpp \
   Game/movement.cpp \
     Game/projectile.cpp \
-    Game/texturemanager.cpp \
   Game/utility.cpp \
     characterchoice.cpp \
     creditswindow.cpp \
@@ -36,9 +36,9 @@ HEADERS += \
     Game/gameengine.hpp \
     Game/hero.hpp \
   Game/loader.hpp \
+  Game/managers.h \
   Game/movement.hpp \
     Game/projectile.hpp \
-    Game/texturemanager.h \
     Game/utility.hpp \
     characterchoice.hpp \
     creditswindow.hpp \
