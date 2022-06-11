@@ -1,5 +1,9 @@
 #include "hero.hpp"
 
+namespace Game {
+extern uint32_t globalTime;
+}
+
 const std::array<sf::IntRect, 3> Hero::m_texRects{sf::IntRect(0, 0, 8, 8), sf::IntRect(8, 0, 8, 8), sf::IntRect(16, 0, 8, 8)};
 
 Hero::Hero(GameEngine * host, uint16_t posX, uint16_t posY, uint16_t health, const std::string &playerFileName) :
@@ -14,6 +18,7 @@ void Hero::gameTick(float deltaTime)
 {
    //todo: taking and receiving shots
     calculateMovement(deltaTime);
+    fire();
 }
 
 void Hero::calculateMovement(float deltaTime)
@@ -38,7 +43,13 @@ void Hero::calculateMovement(float deltaTime)
 
 void Hero::fire()
 {
-
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        if (lastFired + firingCooldown < Game::globalTime) {
+            lastFired = Game::globalTime;
+            auto projectile = std::make_shared<Projectile>(host, m_posX, m_posY, 0, 200, ProjectileLevel::Level1);
+            host->addObject(projectile);
+        }
+    }
 }
 
 int16_t Hero::health() const
@@ -46,8 +57,15 @@ int16_t Hero::health() const
     return m_health;
 }
 
-void Hero::decreaseHealth(uint16_t amount)
+void Hero::decreaseHealth(int16_t amount)
 {
+    if (amount < 0) {
+        std::cout << "healed";
+    }
+
     m_health -= amount;
+    if (m_health < 0) {
+        m_health = 0;
+    }
 }
 

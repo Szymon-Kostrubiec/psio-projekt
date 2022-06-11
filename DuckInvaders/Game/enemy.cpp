@@ -11,7 +11,7 @@ Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY) :
     textureDead.loadFromFile("Textures/deadduck.png");
 }
 
-void Enemy::gameTick(float deltaTime)
+void Enemy::gameTick([[maybe_unused]]float deltaTime)
 {
     if (state not_eq State::Dead) {
 //        setPosition(movement->getNextPosition(deltaTime * m_vel));
@@ -64,12 +64,16 @@ void Enemy::animate()
 
 void Enemy::spawnProjectile()
 {
+    if (dead())
+        return;
+
     if (lastProjectileFired + projectileTimeout < Game::globalTime) {
 
         lastProjectileFired = Game::globalTime;
 
         if (randomDouble(1.0) < projectileChance) {
-            auto projectile = std::make_shared<Projectile>(host, m_posX, m_posY, 0, 400, ProjectileLevel::Level1);
+            auto projectile = std::make_shared<EnemyProjectile>(host, m_posX, m_posY, 0, 400,
+                                                                (randomInt(10) < 7) ? Type::Damage : Type::Health);
             host->addObject(projectile);
         }
 

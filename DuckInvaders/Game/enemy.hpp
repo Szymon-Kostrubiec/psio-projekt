@@ -19,7 +19,7 @@ public:
     explicit Enemy(GameEngine * host, uint16_t startX, uint16_t startY);
     void gameTick(float deltaTime) override;
     void die();
-
+    bool dead() const {return state == State::Dead;}
 private:
     void loadTextures();
     void animate();

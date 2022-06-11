@@ -3,9 +3,9 @@
 const std::array<std::string, 5> DisplayPlayer::playerFileNames{
     "Textures/player1.png", "Textures/player2.png", "Textures/player3.png", "Textures/player4.png", "Textures/player5.png"};
 
-DisplayPlayer::DisplayPlayer(QObject *parent) : QGraphicsScene{parent}, pixMapDisplayed(nullptr),
-    currentPlayer(0) {
-
+DisplayPlayer::DisplayPlayer(QObject *parent) : QGraphicsScene{parent}, currentPlayer(0),
+    pixMapDisplayed(nullptr) {
+    changePlayer(0);
 }
 
 DisplayPlayer::~DisplayPlayer()
