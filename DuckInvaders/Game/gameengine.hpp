@@ -14,17 +14,21 @@
 class Hero;
 class Projectile;
 
+constexpr auto windowX = 1000;
+constexpr auto windowY = 800;
+
 class GameEngine
 {
 public:
     explicit GameEngine(uint16_t windowSizeX, uint16_t windowSizeY, Difficulty diff, std::string const &heroTex);
     void addObject(std::shared_ptr<GameObject> const &newObject);
-    void addProjecitle(std::shared_ptr<GameObject> const &newProj) {
+    void addProjectile(std::shared_ptr<GameObject> const &newProj) {
         addObject(newProj);
         projectiles.emplace_back(newProj.get());
     }
     void addText(Game::Text * textObj);
     void enterGameLoop();
+    void decreaseEnemyCount() {enemyCount--;}
 
     Difficulty const gameDifficulty;
 

@@ -23,22 +23,7 @@ sf::Vector2f Sinusoidal::getNextPosition(float step)
 
 sf::Vector2f Circle::getNextPosition(float step)
 {
-    if (m_clockwise) {
-        if (m_lastY > y0)
-            m_lastX += step;
-        else
-            m_lastX -= step;
-    }
-    else {
-        if (m_lastY < y0)
-            m_lastX += step;
-        else
-            m_lastX -= step;
-    }
 
-    auto absNextPos = sqrt(pow(r, 2) - pow(m_lastX - x0, 2) - y0);
-
-    return sf::Vector2f(m_lastX, (m_lastY = absNextPos)); //fixme
 }
 
 sf::Vector2f Ellipse::getNextPosition(float step)

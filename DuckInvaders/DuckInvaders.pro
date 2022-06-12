@@ -35,7 +35,6 @@ HEADERS += \
     Game/gameObject.hpp \
     Game/gameengine.hpp \
     Game/hero.hpp \
-  Game/loader.hpp \
   Game/managers.h \
   Game/movement.hpp \
     Game/projectile.hpp \

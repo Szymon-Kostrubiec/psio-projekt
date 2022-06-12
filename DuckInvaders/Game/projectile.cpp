@@ -13,8 +13,9 @@ void Projectile::gameTick(float deltaTime)
 {
     calculateMovement(deltaTime);
 
-//    if (m_posY < -50)
-//        host->removeMe(this);
+    if (m_posX < -50 or m_posX > windowX + 50 or m_posY < -50 or m_posY > windowY + 50) {
+        expired = true;
+    }
 }
 
 void Projectile::calculateMovement(float deltaTime)

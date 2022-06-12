@@ -20,6 +20,7 @@ public:
     void gameTick(float deltaTime) override;
     void die();
     bool dead() const {return state == State::Dead;}
+    void decreaseHealth(uint16_t amount) {m_health -= amount;}
 private:
     void loadTextures();
     void animate();
@@ -27,7 +28,7 @@ private:
     const uint32_t projectileTimeout;
     static constexpr auto projectileChance = 0.3;
     uint32_t lastProjectileFired;
-    uint8_t m_health;
+    int16_t m_health;
 
     std::array<sf::Texture, 2> textures;
     sf::Texture textureDead;

@@ -46,8 +46,8 @@ void Hero::fire()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         if (lastFired + firingCooldown < Game::globalTime) {
             lastFired = Game::globalTime;
-            auto projectile = std::make_shared<Projectile>(host, m_posX, m_posY, 0, 200, ProjectileLevel::Level1);
-            host->addObject(projectile);
+            auto projectile = std::make_shared<Projectile>(host, m_posX - 50, m_posY + 30, 0, -200, ProjectileLevel::Level1);
+            host->addProjectile(projectile);
         }
     }
 }

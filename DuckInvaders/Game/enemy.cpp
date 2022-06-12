@@ -5,7 +5,8 @@ uint32_t globalTime;
 }
 
 Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY) :
-    GameObject(host, startX, startY), projectileTimeout(1000), lastProjectileFired(0)
+    GameObject(host, startX, startY), projectileTimeout(1000), lastProjectileFired(0),
+    m_health(30)
 {
     loadTextures();
     textureDead.loadFromFile("Textures/deadduck.png");
@@ -15,6 +16,10 @@ void Enemy::gameTick([[maybe_unused]]float deltaTime)
 {
     if (state not_eq State::Dead) {
 //        setPosition(movement->getNextPosition(deltaTime * m_vel));
+        if (m_health <= 0) {
+            die();
+            return;
+        }
     }
     else {
         if (Game::globalTime > timeOfDeath + 500) {
@@ -29,6 +34,7 @@ void Enemy::die()
 {
     state = State::Dead;
     timeOfDeath = Game::globalTime;
+    host->decreaseEnemyCount();
 }
 
 void Enemy::loadTextures()

@@ -14,6 +14,7 @@ protected:
     GameObject(GameEngine * host, float startPosX, float startPosY) :
         expired(false), m_posX(startPosX), m_posY(startPosY), host(host) {
         setPosition(m_posX, m_posY);
+        setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
     }
     float m_posX, m_posY;
     sf::Texture m_texture;

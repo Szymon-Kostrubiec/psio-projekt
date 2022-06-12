@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
-
+#include <memory>
 class MovementCalc {
  public:
   explicit MovementCalc(float startX, float startY)
@@ -15,6 +15,8 @@ class MovementCalc {
   mutable float m_lastY;
 };
 
+std::shared_ptr<MovementCalc>  getRandomMovement();
+
 class Ellipse final : public MovementCalc {
  public:
   explicit Ellipse(float startX, float startY, bool clockwise)
@@ -26,7 +28,7 @@ class Ellipse final : public MovementCalc {
   bool m_clockwise;
      float a, b, x0, y0;
 
-  friend class enemyLoader;
+  friend std::shared_ptr<MovementCalc> getRandomMovement();
 };
 
 class Circle final : public MovementCalc {
@@ -38,9 +40,11 @@ class Circle final : public MovementCalc {
 
  private:
   bool m_clockwise;
-     float x0, y0, r;
+  float x0, y0, r;
+  float phi;
+  float angularVelocity;
 
-  friend class enemyLoader;
+  friend std::shared_ptr<MovementCalc> getRandomMovement();
 };
 
 class Sinusoidal final : public MovementCalc {
@@ -63,5 +67,5 @@ class Sinusoidal final : public MovementCalc {
   float m_allCoeff;
   float m_delay;
 
-  friend class EnemyLoader;
+  friend std::shared_ptr<MovementCalc> getRandomMovement();
 };
