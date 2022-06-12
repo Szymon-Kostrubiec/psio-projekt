@@ -13,6 +13,7 @@
 
 class Hero;
 class Projectile;
+class MovementCalc;
 
 constexpr auto windowX = 1000;
 constexpr auto windowY = 800;
@@ -28,7 +29,6 @@ public:
     }
     void addText(Game::Text * textObj);
     void enterGameLoop();
-    void decreaseEnemyCount() {enemyCount--;}
 
     Difficulty const gameDifficulty;
 

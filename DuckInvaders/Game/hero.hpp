@@ -21,11 +21,11 @@ private:
     void calculateMovement(float);
     void fire();
     uint32_t lastFired;
-    static constexpr auto firingCooldown = 500;
+    static constexpr auto firingCooldown{500};
     int16_t m_health;
     sf::Texture m_texture;
     static const std::array<sf::IntRect, 3> m_texRects;
-    static constexpr uint16_t heroSpeed{200};
+    static constexpr uint16_t heroSpeed{300};
     ProjectileLevel m_currentProjectileLevel;
 };
 

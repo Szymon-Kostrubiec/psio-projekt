@@ -6,23 +6,31 @@ uint32_t globalTime;
 
 Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY) :
     GameObject(host, startX, startY), projectileTimeout(1000), lastProjectileFired(0),
-    m_health(30)
+    m_health(30), movement(getRandomMovement())
 {
     loadTextures();
     textureDead.loadFromFile("Textures/deadduck.png");
 }
 
+Enemy::~Enemy()
+{
+    delete movement;
+}
+
 void Enemy::gameTick([[maybe_unused]]float deltaTime)
 {
-    if (state not_eq State::Dead) {
-//        setPosition(movement->getNextPosition(deltaTime * m_vel));
+    if (m_posX < 0 or m_posX > windowX or m_posY < 0 or m_posY > windowY) {
+        die();
+    }
+    if (not dead()) {
+        setPosition(movement->getNextPosition(deltaTime));
         if (m_health <= 0) {
             die();
             return;
         }
     }
     else {
-        if (Game::globalTime > timeOfDeath + 500) {
+        if (Game::globalTime > timeOfDeath + 500 and dead()) {
             expired = true;
         }
     }
@@ -34,7 +42,6 @@ void Enemy::die()
 {
     state = State::Dead;
     timeOfDeath = Game::globalTime;
-    host->decreaseEnemyCount();
 }
 
 void Enemy::loadTextures()

@@ -57,6 +57,9 @@ void GameEngine::enterGameLoop() {
       }
     }
 
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) and randomInt(200) < 1)
+        enemyCount = 0;
+
     cleanup();
     spawnEnemies();
 
@@ -75,8 +78,11 @@ void GameEngine::enterGameLoop() {
 
     if (not m_paused) {
       // let every game object perform a tick
+        enemyCount = 0;
       for (auto const &obj : m_objects) {
         obj->gameTick(deltaTime);
+          if (dynamic_cast<Enemy *>(obj.get()))
+            enemyCount++;
       }
     }
     // draw every game object
@@ -115,7 +121,6 @@ void GameEngine::collisionsEngine() {
       }
     }
   }
-  std::cout << projectiles.size() << std::endl;
   for (auto const &obj : projectiles) {
     if (auto projectile = dynamic_cast<Projectile *>(obj)) {
       for (auto const &gameObj : m_objects) {
@@ -161,7 +166,7 @@ void GameEngine::spawnEnemies() {
       (static_cast<uint>(gameDifficulty) + phase) * randomInt(3, 1);
 
   for (std::size_t iter = 0; iter < newEnemies; ++iter) {
-    auto enemy = std::make_shared<Enemy>(this, randomInt(windowX * 0.7f), randomInt(windowY));
+    auto enemy = std::make_shared<Enemy>(this, randomInt(windowX * 0.9f), randomInt(windowY * 0.5f));
       enemyCount++;
     addObject(enemy);
   }

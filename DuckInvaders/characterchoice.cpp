@@ -8,6 +8,8 @@ CharacterChoice::CharacterChoice(QWidget *parent) :
     ui->setupUi(this);
     m_labels = {ui->easy, ui->normal, ui->hard};
 
+    setWindowTitle("Duck Invaders: Choose your hero");
+
     clearButtons();
     ui->viewPlayer->setScene(displayPlayer);
 }

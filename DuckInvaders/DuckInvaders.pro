@@ -18,7 +18,6 @@ SOURCES += \
     Game/enemy.cpp \
     Game/gameengine.cpp \
     Game/hero.cpp \
-  Game/loader.cpp \
   Game/managers.cpp \
   Game/movement.cpp \
     Game/projectile.cpp \
