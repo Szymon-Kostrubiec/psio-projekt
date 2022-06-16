@@ -60,13 +60,12 @@ class Sinusoidal final : public MovementCalc {
   virtual sf::Vector2f getNextPosition(float step) override final;
 
  private:
+  float m_velocity;
   bool m_positiveDirection;
   float m_xMin;
   float m_xMax;
-  float sineCoeff;
-  float cosineCoeff;
+  float m_sineCoeff;
   float m_allCoeff;
-  float m_delay;
 
   friend MovementCalc* getRandomMovement();
 };

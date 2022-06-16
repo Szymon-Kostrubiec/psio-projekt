@@ -10,6 +10,7 @@ Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY) :
 {
     loadTextures();
     textureDead.loadFromFile("Textures/deadduck.png");
+    setTexture(m_textures.at(0));
 }
 
 Enemy::~Enemy()
@@ -46,12 +47,12 @@ void Enemy::die()
 
 void Enemy::loadTextures()
 {
-    if (not textures.at(0).loadFromFile("Textures/Idle 001.png"))
+    if (not m_textures.at(0).loadFromFile("Textures/Idle 001.png"))
         std::cerr << "Could not load texture 1" << std::endl;
-    if (not textures.at(1).loadFromFile("Textures/Idle 002.png"))
+    if (not m_textures.at(1).loadFromFile("Textures/Idle 002.png"))
         std::cerr << "Could not load texture 2" << std::endl;
 
-    setTexture(textures.at(1));
+    setTexture(m_textures.at(1));
 }
 
 void Enemy::animate()
@@ -66,7 +67,7 @@ void Enemy::animate()
             else
                 state = State::Idle1;
 
-            setTexture(textures.at(static_cast<uint8_t>(state)));
+            setTexture(m_textures.at(static_cast<uint8_t>(state)));
         }
         animationClock++;
     }

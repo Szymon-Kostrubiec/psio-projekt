@@ -15,6 +15,7 @@ GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
       m_scoreText("Score:\n0", 20, 0, 0),
       m_healthText("Health:\n0", 20, 0, 45),
       m_loseText("", 40, windowSizeX / 2, windowSizeY / 2) {
+
   backgroundTexture.loadFromFile("Textures/background.jpg");
   backgroundTexture.setRepeated(true);
   background.setTexture(backgroundTexture);
@@ -58,7 +59,7 @@ void GameEngine::enterGameLoop() {
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) and randomInt(200) < 1)
-        enemyCount = 0;
+      enemyCount = 0;
 
     cleanup();
     spawnEnemies();
@@ -78,11 +79,10 @@ void GameEngine::enterGameLoop() {
 
     if (not m_paused) {
       // let every game object perform a tick
-        enemyCount = 0;
+      enemyCount = 0;
       for (auto const &obj : m_objects) {
         obj->gameTick(deltaTime);
-          if (dynamic_cast<Enemy *>(obj.get()))
-            enemyCount++;
+        if (dynamic_cast<Enemy *>(obj.get())) enemyCount++;
       }
     }
     // draw every game object
@@ -112,7 +112,7 @@ void GameEngine::collisionsEngine() {
           m_hero->decreaseHealth(
               100 + 50 * static_cast<unsigned int>(gameDifficulty));
           m_score += 50 + static_cast<uint>(gameDifficulty) *
-                     50;  // after all, the duck did die
+                              50;  // after all, the duck did die
           duck->die();
         }
       } else if (auto projectile = dynamic_cast<EnemyProjectile *>(obj.get())) {
@@ -124,8 +124,7 @@ void GameEngine::collisionsEngine() {
   for (auto const &obj : projectiles) {
     if (auto projectile = dynamic_cast<Projectile *>(obj)) {
       for (auto const &gameObj : m_objects) {
-        if (gameObj->getGlobalBounds().intersects(
-                obj->getGlobalBounds())) {
+        if (gameObj->getGlobalBounds().intersects(obj->getGlobalBounds())) {
           if (auto enemy = dynamic_cast<Enemy *>(gameObj.get())) {
             enemy->decreaseHealth(projectile->damagePotential());
             projectile->expired = true;
@@ -134,15 +133,12 @@ void GameEngine::collisionsEngine() {
           }
         }
       }
-
     }
   }
 }
 
 void GameEngine::cleanup() {
-    projectiles.remove_if([](GameObject const * obj){
-                   return obj->expired;
-    });
+  projectiles.remove_if([](GameObject const *obj) { return obj->expired; });
   m_objects.remove_if(
       [](std::shared_ptr<GameObject> const &obj) { return obj->expired; });
 }
@@ -166,8 +162,9 @@ void GameEngine::spawnEnemies() {
       (static_cast<uint>(gameDifficulty) + phase) * randomInt(3, 1);
 
   for (std::size_t iter = 0; iter < newEnemies; ++iter) {
-    auto enemy = std::make_shared<Enemy>(this, randomInt(windowX * 0.9f), randomInt(windowY * 0.5f));
-      enemyCount++;
+    auto enemy = std::make_shared<Enemy>(this, randomInt(windowX * 0.9f),
+                                         randomInt(windowY * 0.5f));
+    enemyCount++;
     addObject(enemy);
   }
 }

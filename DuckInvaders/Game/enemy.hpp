@@ -24,7 +24,7 @@ public:
     void die();
     bool dead() const {return state == State::Dead;}
     void decreaseHealth(uint16_t amount) {m_health -= amount;}
-private:
+protected:
     void loadTextures();
     void animate();
     void spawnProjectile();
@@ -33,7 +33,7 @@ private:
     uint32_t lastProjectileFired;
     int16_t m_health;
 
-    std::array<sf::Texture, 2> textures;
+    std::array<sf::Texture, 2> m_textures;
     sf::Texture textureDead;
     State state;
     uint32_t timeOfDeath;
@@ -44,3 +44,6 @@ private:
     friend class EnemyBuilder;
 };
 
+class Boss : public Enemy {
+
+};

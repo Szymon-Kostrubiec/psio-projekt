@@ -36,6 +36,6 @@ EnemyProjectile::EnemyProjectile(GameEngine *host, uint16_t posX, uint16_t posY,
     else if (type == Type::Health) {
         m_damagePotential = -50;
         m_texture.loadFromFile("Textures/Heart.png");
-        setScale(0.1f, 0.1f);
+        setScale(0.5f, 0.5f);
     }
 }

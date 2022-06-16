@@ -2,25 +2,27 @@
 
 inline static float radians(float degrees) { return degrees * 3.1415 / 180; }
 
-static constexpr auto spawnableX = windowX * 0.8 + windowX * 0.1;
+static constexpr auto spawnableX = windowX * 0.8; //todo: lower bound
 static constexpr auto spawnableY = windowY * 0.6;
 static constexpr auto maxEnemyLinearVel = 200;
 static constexpr auto maxEnemyAngularVel = 90;
 static constexpr auto minEnemyAngularVel = 45;
 
+static inline float sineValue(float x, float a, float b) {
+    return a * sin(b*x);
+}
+static inline float integrandValue(float x, float a, float b) {
+    return sqrt(1.0f + a*b*cos(b*x));
+}
+static constexpr auto increment = 0.01f;
+
+static float estimateIntegral(float startX, float a, float b, float translation);
+
 sf::Vector2f Sinusoidal::getNextPosition(float step) {
-  if (m_lastX > m_xMax)
-    m_positiveDirection = false;
-  else if (m_lastX < m_xMin)
-    m_positiveDirection = true;
+    auto curveLength = step * m_velocity;
+    auto nextX = estimateIntegral(m_lastX, m_allCoeff, m_sineCoeff, curveLength);
 
-  if (m_positiveDirection)
-    m_lastX += step;
-  else
-    m_lastX -= step;
-
-  return sf::Vector2f(
-      m_lastX, (m_lastY = m_allCoeff * sin(m_lastX) * cos(m_lastX) - m_delay));
+    return sf::Vector2f((m_lastX = nextX), sineValue(nextX, m_allCoeff, m_sineCoeff));
 }
 
 sf::Vector2f Circle::getNextPosition(float step) {
@@ -64,7 +66,7 @@ MovementCalc *getRandomMovement() {
       auto circle = new Circle(randomX, randomY);
       circle->x0 = randomX;
       circle->y0 = randomY;
-      circle->r = randomDouble(50);
+      circle->r = randomDouble(150);
       circle->angularVelocity =
           randomDouble(maxEnemyAngularVel, minEnemyAngularVel);
       circle->phi = randomDouble(360);
@@ -74,11 +76,31 @@ MovementCalc *getRandomMovement() {
       return new RandomMovement(randomX, randomY,
                                 randomDouble(maxEnemyLinearVel));
     case 2:
-    case 3:
+    case 3: {
+        auto sine = new Sinusoidal(randomX, randomY, windowX*.1f, windowX * .9f, (randomInt(10) < 5));
+        sine->m_sineCoeff = randomDouble(40, 1);
+        sine->m_allCoeff = randomDouble(4, 1);
+        sine->m_velocity = randomDouble(20) * ((randomInt(10) < 5) ? 1 : -1);
+        return sine;
+    }
     default:
 
      return new VerticalMovement(
           randomX, randomY,
           randomDouble(maxEnemyLinearVel));  // to be deleted in caller
   }
+}
+
+
+static float estimateIntegral(float startX, float a, float b, float translation) {
+    //function to estimate x, x > startX, satisfying integral ~ translation
+    auto currentTranslation = 0.f;
+    auto currentX = startX;
+
+    while (currentTranslation < translation) {
+
+        currentTranslation += integrandValue(currentX, a, b) * increment;
+        currentX += increment;
+    }
+    return currentX;    //todo: first x satisfying currentTranslation < translation isn't always the closest
 }
