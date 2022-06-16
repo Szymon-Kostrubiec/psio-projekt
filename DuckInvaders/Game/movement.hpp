@@ -4,62 +4,59 @@
 #include <cmath>
 #include <memory>
 
-#include "gameengine.hpp"
 #include "utility.hpp"
 
 class MovementCalc {
- public:
+public:
   explicit MovementCalc(float startX, float startY)
       : m_lastX(startX), m_lastY(startY) {}
 
   virtual ~MovementCalc() {}
   virtual sf::Vector2f getNextPosition(float step) = 0;
 
- protected:
+protected:
   mutable float m_lastX;
   mutable float m_lastY;
 };
 
-MovementCalc* getRandomMovement();
+MovementCalc *getRandomMovement();
 
 class Ellipse final : public MovementCalc {
- public:
+public:
   explicit Ellipse(float startX, float startY) : MovementCalc(startX, startY) {}
 
   virtual sf::Vector2f getNextPosition(float step) override final;
 
- private:
+private:
   bool m_clockwise;
   float a, b, x0, y0;
 
-  friend MovementCalc* getRandomMovement();
+  friend MovementCalc *getRandomMovement();
 };
 
 class Circle final : public MovementCalc {
- public:
+public:
   virtual sf::Vector2f getNextPosition(float step) override final;
   explicit Circle(float startX, float startY) : MovementCalc(startX, startY) {}
 
- private:
+private:
   float x0, y0, r;
   float phi;
-  float angularVelocity;  // to be initialized by a friend
+  float angularVelocity; // to be initialized by a friend
 
-  friend MovementCalc* getRandomMovement();
+  friend MovementCalc *getRandomMovement();
 };
 
 class Sinusoidal final : public MovementCalc {
- public:
+public:
   explicit Sinusoidal(float startX, float startY, float xMin, float xMax,
                       bool direction)
-      : MovementCalc(startX, startY),
-        m_positiveDirection(direction),
-        m_xMin(xMin),
-        m_xMax(xMax) {}
+      : MovementCalc(startX, startY), m_positiveDirection(direction),
+        m_xMin(xMin), m_xMax(xMax) {}
 
   virtual sf::Vector2f getNextPosition(float step) override final;
 
- private:
+private:
   float m_velocity;
   bool m_positiveDirection;
   float m_xMin;
@@ -67,31 +64,31 @@ class Sinusoidal final : public MovementCalc {
   float m_sineCoeff;
   float m_allCoeff;
 
-  friend MovementCalc* getRandomMovement();
+  friend MovementCalc *getRandomMovement();
 };
 
 class RandomMovement final : public MovementCalc {
- public:
+public:
   explicit RandomMovement(float startX, float startY, float velocity)
       : MovementCalc(startX, startY), m_velocity(velocity) {}
 
   virtual sf::Vector2f getNextPosition(float step) override final;
 
- private:
+private:
   float m_velocity;
 
-  friend MovementCalc* getRandomMovement();
+  friend MovementCalc *getRandomMovement();
 };
 
 class VerticalMovement final : public MovementCalc {
- public:
+public:
   explicit VerticalMovement(float startX, float startY, float velocity)
       : MovementCalc(startX, startY), m_velocity(velocity) {}
 
   virtual sf::Vector2f getNextPosition(float step) override final;
 
- private:
+private:
   float m_velocity;
 
-  friend MovementCalc* getRandomMovement();
+  friend MovementCalc *getRandomMovement();
 };

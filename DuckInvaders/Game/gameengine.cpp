@@ -6,13 +6,9 @@ extern uint16_t globalTime;
 
 GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
                        Difficulty diff, std::string const &heroTex)
-    : gameDifficulty(diff),
-      phase(0),
-      enemyCount(0),
-      m_paused(false),
+    : gameDifficulty(diff), phase(0), enemyCount(0), m_paused(false),
       m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders"),
-      m_score(0),
-      m_scoreText("Score:\n0", 20, 0, 0),
+      m_score(0), m_scoreText("Score:\n0", 20, 0, 0),
       m_healthText("Health:\n0", 20, 0, 45),
       m_loseText("", 40, windowSizeX / 2, windowSizeY / 2) {
 
@@ -26,9 +22,8 @@ GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
                                   health, heroTex);
   addObject(m_hero);
 
-  // showcase
-  //    auto duck = std::make_shared<Enemy>(this, windowSizeX/2, 200);
-  //    addObject(duck);
+  // dbg
+  addObject(std::make_shared<Boss>(this, windowX / 2, windowY * 0.2f));
 
   m_textObjects.emplace_back(&m_scoreText);
   m_textObjects.emplace_back(&m_healthText);
@@ -82,7 +77,8 @@ void GameEngine::enterGameLoop() {
       enemyCount = 0;
       for (auto const &obj : m_objects) {
         obj->gameTick(deltaTime);
-        if (dynamic_cast<Enemy *>(obj.get())) enemyCount++;
+        if (dynamic_cast<Enemy *>(obj.get()))
+          enemyCount++;
       }
     }
     // draw every game object
@@ -99,6 +95,8 @@ void GameEngine::enterGameLoop() {
   }
 }
 
+sf::Vector2f GameEngine::getPlayerPos() const { return m_hero->getPosition(); }
+
 void GameEngine::collisionsEngine() {
   if (m_paused) {
     return;
@@ -109,11 +107,14 @@ void GameEngine::collisionsEngine() {
     if (obj->getGlobalBounds().intersects(m_hero->getGlobalBounds())) {
       if (auto duck = dynamic_cast<Enemy *>(obj.get())) {
         if (not duck->dead()) {
-          m_hero->decreaseHealth(
-              100 + 50 * static_cast<unsigned int>(gameDifficulty));
-          m_score += 50 + static_cast<uint>(gameDifficulty) *
-                              50;  // after all, the duck did die
-          duck->die();
+          if (not dynamic_cast<Boss *>(obj.get())) {
+            m_hero->decreaseHealth(
+                100 + 50 * static_cast<unsigned int>(gameDifficulty));
+            m_score += 50 + static_cast<uint>(gameDifficulty) *
+                                50; // after all, the duck did die
+            duck->die();
+          } else
+            (m_hero->decreaseHealth(10000));
         }
       } else if (auto projectile = dynamic_cast<EnemyProjectile *>(obj.get())) {
         m_hero->decreaseHealth(projectile->damagePotential());
@@ -122,6 +123,9 @@ void GameEngine::collisionsEngine() {
     }
   }
   for (auto const &obj : projectiles) {
+    if (dynamic_cast<EnemyProjectile *>(obj)) {
+      continue;
+    }
     if (auto projectile = dynamic_cast<Projectile *>(obj)) {
       for (auto const &gameObj : m_objects) {
         if (gameObj->getGlobalBounds().intersects(obj->getGlobalBounds())) {
@@ -149,12 +153,17 @@ void GameEngine::checkLose() {
 
     m_loseText.setString("You lost.\nScore: " + std::to_string(m_score));
 
-    addText(&m_loseText);  // display lose text
+    addText(&m_loseText); // display lose text
   }
 }
 
 void GameEngine::spawnEnemies() {
-  if (enemyCount > 0) return;
+
+  // dbg
+  return;
+
+  if (enemyCount > 0)
+    return;
 
   phase++;
 

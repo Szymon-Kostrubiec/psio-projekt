@@ -1,49 +1,63 @@
 #pragma once
 
-#include <iostream>
-#include <memory>
-#include "utility.hpp"
 #include "gameObject.hpp"
 #include "movement.hpp"
 #include "projectile.hpp"
+#include "utility.hpp"
+#include <iostream>
+#include <memory>
 
-enum class State : uint8_t {Idle1, Idle2, AboutToFire, Dead};
-//params
+enum class State : uint8_t { Idle1, Idle2, AboutToFire, Dead };
+// params
 static constexpr int animationFrequency = 2000;
 
-class MovementCalc;
+enum class Level : uint8_t { Level1, Level2, Level3, Level4, Level5 };
 
-enum class Level : uint8_t {Level1, Level2, Level3, Level4, Level5};
-
-class Enemy: public GameObject
-{
+class Enemy : public GameObject {
 public:
-    explicit Enemy(GameEngine * host, uint16_t startX, uint16_t startY);
-    virtual ~Enemy();
-    void gameTick(float deltaTime) override;
-    void die();
-    bool dead() const {return state == State::Dead;}
-    void decreaseHealth(uint16_t amount) {m_health -= amount;}
+  explicit Enemy(GameEngine *host, uint16_t startX, uint16_t startY);
+  virtual ~Enemy();
+  void gameTick(float deltaTime) override;
+  void takeDamage(uint16_t dmg) { m_health -= dmg; }
+  void die();
+  bool dead() const { return state == State::Dead; }
+  void decreaseHealth(uint16_t amount) { m_health -= amount; }
+
 protected:
-    void loadTextures();
-    void animate();
-    void spawnProjectile();
-    const uint32_t projectileTimeout;
-    static constexpr auto projectileChance = 0.3;
-    uint32_t lastProjectileFired;
-    int16_t m_health;
+  void loadTextures();
+  void animate();
+  void spawnProjectile();
+  const uint32_t projectileTimeout;
+  static constexpr auto projectileChance = 0.3;
+  uint32_t lastProjectileFired;
+  int16_t m_health;
 
-    std::array<sf::Texture, 2> m_textures;
-    sf::Texture textureDead;
-    State state;
-    uint32_t timeOfDeath;
+  std::array<sf::Texture, 2> m_textures;
+  sf::Texture textureDead;
+  State state;
+  uint32_t timeOfDeath;
 
-    MovementCalc * movement;
-    int16_t m_vel;
+  MovementCalc *movement;
+  int16_t m_vel;
 
-    friend class EnemyBuilder;
+  friend class EnemyBuilder;
 };
 
-class Boss : public Enemy {
+class Boss final : public Enemy {
+public:
+  explicit Boss(GameEngine *host, uint16_t startX, uint16_t startY)
+      : Enemy(host, startX, startY) {
+    setScale(5, 5);
+    m_health = 750;
+    setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
+    delete movement;
+    movement = new VerticalMovement(windowX / 2, windowY / 2, 200);
+  }
+  virtual ~Boss() {}
 
+  virtual void gameTick(float deltaTime) override final;
+
+private:
+  void spawnProjectile();
+  static constexpr auto projectileChance = 0.5;
 };
