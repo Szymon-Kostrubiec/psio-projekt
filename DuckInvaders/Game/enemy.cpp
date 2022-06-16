@@ -10,6 +10,7 @@ Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY)
   loadTextures();
   textureDead.loadFromFile("Textures/deadduck.png");
   setTexture(m_textures.at(0));
+  setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
 }
 
 Enemy::~Enemy() { delete movement; }
@@ -75,7 +76,7 @@ void Enemy::spawnProjectile() {
 
     if (randomDouble(1.0) < projectileChance) {
       auto projectile = std::make_shared<EnemyProjectile>(
-          host, m_posX, m_posY, randomDouble(50, -50), 400,
+          host, getPosition().x, getPosition().y, randomDouble(50, -50), 400,
           (randomInt(10) < 7) ? Type::Damage : Type::Health);
       host->addObject(projectile);
     }
@@ -115,7 +116,8 @@ void Boss::spawnProjectile() {
       auto speedVector = 400.0f * normalizeVector(playerPos - pos);
 
       auto projectile = std::make_shared<EnemyProjectile>(
-          host, m_posX, m_posY, speedVector.x, speedVector.y, Type::Damage);
+          host, getPosition().x, getPosition().y, speedVector.x, speedVector.y,
+          Type::Damage);
       host->addProjectile(projectile);
     }
   }
