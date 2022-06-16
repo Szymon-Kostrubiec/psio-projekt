@@ -45,14 +45,7 @@ protected:
 
 class Boss final : public Enemy {
 public:
-  explicit Boss(GameEngine *host, uint16_t startX, uint16_t startY)
-      : Enemy(host, startX, startY), projectileTimeout(200) {
-    setScale(5, 5);
-    m_health = 750;
-    setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
-    delete movement;
-    movement = new VerticalMovement(windowX / 2, windowY / 5, 200);
-  }
+  explicit Boss(GameEngine *host, uint16_t startX, uint16_t startY);
   virtual ~Boss() {}
 
   virtual void gameTick(float deltaTime) override final;

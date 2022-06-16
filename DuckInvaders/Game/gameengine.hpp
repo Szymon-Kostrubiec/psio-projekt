@@ -8,6 +8,7 @@
 #include <list>
 #include <memory>
 
+#include "dataloader.h"
 #include "enemy.hpp"
 #include "hero.hpp"
 

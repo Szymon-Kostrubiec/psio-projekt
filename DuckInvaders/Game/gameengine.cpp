@@ -4,6 +4,8 @@ namespace Game {
 extern uint16_t globalTime;
 }
 
+DataLoader const dataloader("ProgramData/data.csv");
+
 GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
                        Difficulty diff, std::string const &heroTex)
     : gameDifficulty(diff), phase(0), enemyCount(0), m_paused(false),
@@ -17,9 +19,9 @@ GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
   background.setTexture(backgroundTexture);
   background.setTextureRect(sf::IntRect(0, 0, windowSizeX, windowSizeY));
 
-  auto health = 750 - 250 * static_cast<int>(gameDifficulty);
-  m_hero = std::make_shared<Hero>(this, windowSizeX / 2, windowSizeY * 0.9f,
-                                  health, heroTex);
+  m_hero =
+      std::make_shared<Hero>(this, windowSizeX / 2, windowSizeY * 0.9f,
+                             dataloader.getHeroHp(gameDifficulty), heroTex);
   addObject(m_hero);
 
   // dbg
