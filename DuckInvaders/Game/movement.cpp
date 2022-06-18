@@ -14,7 +14,11 @@ static inline float sineValue(float x, float a, float b) {
 static inline float integrandValue(float x, float a, float b) {
   return sqrt(1.0f + a * b * cos(b * x));
 }
+<<<<<<< Updated upstream
 static constexpr auto increment = 0.0001f;
+=======
+static constexpr auto increment = 0.00001f;
+>>>>>>> Stashed changes
 
 static float estimateIntegral(double startX, double a, double b,
                               double translation);
@@ -28,6 +32,11 @@ sf::Vector2f Sinusoidal::getNextPosition(float step) {
   }
   // trivialisation
 
+<<<<<<< Updated upstream
+=======
+  //#define Verbatim
+
+>>>>>>> Stashed changes
 #ifdef Verbatim
 
   auto previousX = m_lastX;
@@ -35,9 +44,14 @@ sf::Vector2f Sinusoidal::getNextPosition(float step) {
 
 #endif
 
+<<<<<<< Updated upstream
   m_lastX += estimateIntegral(m_lastX, m_allCoeff, m_sineCoeff,
                               step * m_velocity * 10) /
              10;
+=======
+  m_lastX =
+      estimateIntegral(m_lastX, m_allCoeff, m_sineCoeff, step * m_velocity);
+>>>>>>> Stashed changes
   m_lastY = 400 + sineValue(m_lastX, m_allCoeff,
                             m_sineCoeff); // 400 => window positon offset
 
@@ -125,7 +139,11 @@ static float estimateIntegral(double startX, double a, double b,
                               double translation) {
   // function to estimate x, x > startX, satisfying integral ~ translation
   double currentTranslation{0.f};
+<<<<<<< Updated upstream
   double currentX{0.f};
+=======
+  double currentX{startX};
+>>>>>>> Stashed changes
 
   // if integrating a < b
   if (translation > 0) {
@@ -140,6 +158,11 @@ static float estimateIntegral(double startX, double a, double b,
       currentX -= increment;
     }
   }
+<<<<<<< Updated upstream
   return currentX; // todo: first x satisfying currentTranslation < translation
                    // isn't always the closest
+=======
+  return currentX; // todo: first x satisfying currentTranslation <
+                   // translation isn't always the closest
+>>>>>>> Stashed changes
 }
