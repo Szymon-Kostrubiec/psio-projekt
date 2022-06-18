@@ -25,7 +25,8 @@ GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
   addObject(m_hero);
 
   // dbg
-  addObject(std::make_shared<Boss>(this, windowX / 2, windowY * 0.2f));
+  //  addObject(std::make_shared<Boss>(this, windowX / 2, windowY * 0.2f));
+  addObject(std::make_shared<Enemy>(this, windowX / 2, windowY * 0.2f));
 
   m_textObjects.emplace_back(&m_scoreText);
   m_textObjects.emplace_back(&m_healthText);

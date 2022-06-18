@@ -24,6 +24,7 @@ void Enemy::gameTick([[maybe_unused]] float deltaTime) {
   }
   if (not dead()) {
     setPosition(movement->getNextPosition(deltaTime));
+    std::cout << getPosition().x << ' ' << getPosition().y << std::endl;
     if (m_health <= 0) {
       die();
       return;

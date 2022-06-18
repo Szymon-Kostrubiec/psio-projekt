@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <iostream>
 #include <memory>
 
 #include "utility.hpp"
@@ -49,16 +50,13 @@ private:
 
 class Sinusoidal final : public MovementCalc {
 public:
-  explicit Sinusoidal(float startX, float startY, float xMin, float xMax,
-                      bool direction)
-      : MovementCalc(startX, startY), m_positiveDirection(direction),
-        m_xMin(xMin), m_xMax(xMax) {}
+  explicit Sinusoidal(float startX, float startY, float xMin, float xMax)
+      : MovementCalc(startX, startY), m_xMin(xMin), m_xMax(xMax) {}
 
   virtual sf::Vector2f getNextPosition(float step) override final;
 
 private:
   float m_velocity;
-  bool m_positiveDirection;
   float m_xMin;
   float m_xMax;
   float m_sineCoeff;

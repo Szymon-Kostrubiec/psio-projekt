@@ -1,0 +1,5 @@
+Hero hp,700,600,400
+Score increase,50,70,75
+Enemy hp,30,50,65
+Boss hp,300,500,650
+Projectile speed,450,420,400
