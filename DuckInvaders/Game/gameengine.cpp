@@ -8,7 +8,7 @@ DataLoader const dataloader("ProgramData/data.csv");
 
 GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
                        Difficulty diff, std::string const &heroTex)
-    : gameDifficulty(diff), phase(0), enemyCount(0), m_paused(false),
+    : gameDifficulty(diff), phase(-1), enemyCount(0), m_paused(false),
       m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders"),
       m_score(0), m_scoreText("Score:\n0", 20, 0, 0),
       m_healthText("Health:\n0", 20, 0, 45),
@@ -23,10 +23,6 @@ GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
       std::make_shared<Hero>(this, windowSizeX / 2, windowSizeY * 0.9f,
                              dataloader.getHeroHp(gameDifficulty), heroTex);
   addObject(m_hero);
-
-  // dbg
-  //  addObject(std::make_shared<Boss>(this, windowX / 2, windowY * 0.2f));
-  addObject(std::make_shared<Enemy>(this, windowX / 2, windowY * 0.2f));
 
   m_textObjects.emplace_back(&m_scoreText);
   m_textObjects.emplace_back(&m_healthText);
@@ -52,12 +48,8 @@ void GameEngine::enterGameLoop() {
     while (m_window.pollEvent(event)) {
       if (event.type == sf::Event::Closed) {
         m_window.close();
-        // todo: add handling
       }
     }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R) and randomInt(200) < 1)
-      enemyCount = 0;
 
     cleanup();
     spawnEnemies();
@@ -73,21 +65,21 @@ void GameEngine::enterGameLoop() {
 
     collisionsEngine();
 
+    //    std::cout << std::to_string(enemyCount) << std::endl;
+
     checkLose();
 
     if (not m_paused) {
       // let every game object perform a tick
-      enemyCount = 0;
       for (auto const &obj : m_objects) {
         obj->gameTick(deltaTime);
-        if (dynamic_cast<Enemy *>(obj.get()))
-          enemyCount++;
+        m_window.draw(*obj);
       }
     }
     // draw every game object
-    for (auto const &obj : m_objects) {
-      m_window.draw(*obj);
-    }
+    //    for (auto const &obj : m_objects) {
+    //      m_window.draw(*obj);
+    //    }
     m_scoreText.setString("Score:\n" + std::to_string(m_score));
     m_healthText.setString("Health:\n" + std::to_string(m_hero->health()));
     // draw every text object
@@ -162,21 +154,43 @@ void GameEngine::checkLose() {
 
 void GameEngine::spawnEnemies() {
 
-  // dbg
-  return;
-
-  if (enemyCount > 0)
+  if (enemyCount not_eq 0)
     return;
 
   phase++;
+  std::cout << "Progressed to a new phase " << std::to_string(phase)
+            << std::endl;
 
-  auto newEnemies =
-      (static_cast<uint>(gameDifficulty) + phase) * randomInt(3, 1);
-
-  for (std::size_t iter = 0; iter < newEnemies; ++iter) {
-    auto enemy = std::make_shared<Enemy>(this, randomInt(windowX * 0.9f),
-                                         randomInt(windowY * 0.5f));
-    enemyCount++;
-    addObject(enemy);
+  switch (phase % 3) {
+  case 1:
+  case 0:
+    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
+                                      MovementType::Circle));
+    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
+                                      MovementType::Vertical));
+    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
+                                      MovementType::Vertical));
+    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
+                                      MovementType::Vertical));
+    enemyCount = 4;
+    break;
+    //  case 1:
+    //    //    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY /
+    //    2,
+    //    //                                      MovementType::Circle));
+    //    //    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY /
+    //    2,
+    //    //                                      MovementType::Sinusoidal));
+    //    //    //    addObject(std::make_shared<Enemy>(this, windowX / 2,
+    //    windowY /
+    //    //    2,
+    //    //    // MovementType::Vertical));
+    //    //    enemyCount = 3;
+    //    enemyCount = 2;
+    //    break;
+  case 2:
+    addObject(std::make_shared<Boss>(this, windowX / 2, windowY / 2));
+    enemyCount = 1;
+    break;
   }
 }

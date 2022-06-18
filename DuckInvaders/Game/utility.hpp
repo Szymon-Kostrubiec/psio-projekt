@@ -5,7 +5,8 @@
 #include <random>
 
 enum class ProjectileLevel : uint8_t { Level1, Level2, Level3, Level4 };
-enum class Difficulty : uint8_t { Easy = 0, Medium = 1, Hard = 2 };
+enum class Difficulty : uint8_t { Easy, Medium, Hard };
+enum class MovementType : uint8_t { Circle, Sinusoidal, Vertical, Random };
 
 constexpr auto windowX = 1000;
 constexpr auto windowY = 800;

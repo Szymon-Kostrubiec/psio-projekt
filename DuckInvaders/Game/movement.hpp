@@ -20,7 +20,7 @@ protected:
   mutable float m_lastY;
 };
 
-MovementCalc *getRandomMovement();
+MovementCalc *getRandomMovement(MovementType);
 
 class Ellipse final : public MovementCalc {
 public:
@@ -32,7 +32,7 @@ private:
   bool m_clockwise;
   float a, b, x0, y0;
 
-  friend MovementCalc *getRandomMovement();
+  friend MovementCalc *getRandomMovement(MovementType);
 };
 
 class Circle final : public MovementCalc {
@@ -45,7 +45,7 @@ private:
   float phi;
   float angularVelocity; // to be initialized by a friend
 
-  friend MovementCalc *getRandomMovement();
+  friend MovementCalc *getRandomMovement(MovementType);
 };
 
 class Sinusoidal final : public MovementCalc {
@@ -62,7 +62,7 @@ private:
   float m_sineCoeff;
   float m_allCoeff;
 
-  friend MovementCalc *getRandomMovement();
+  friend MovementCalc *getRandomMovement(MovementType);
 };
 
 class RandomMovement final : public MovementCalc {
@@ -75,7 +75,7 @@ public:
 private:
   float m_velocity;
 
-  friend MovementCalc *getRandomMovement();
+  friend MovementCalc *getRandomMovement(MovementType);
 };
 
 class VerticalMovement final : public MovementCalc {
@@ -88,5 +88,5 @@ public:
 private:
   float m_velocity;
 
-  friend MovementCalc *getRandomMovement();
+  friend MovementCalc *getRandomMovement(MovementType);
 };

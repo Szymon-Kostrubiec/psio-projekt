@@ -5,26 +5,29 @@ uint32_t globalTime;
 }
 DataLoader const dataloader("ProgramData/data.csv");
 
-Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY)
+Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY,
+             MovementType type)
     : GameObject(host, startX, startY), projectileTimeout(1000),
       lastProjectileFired(0),
       m_health(dataloader.getEnemyHp(host->gameDifficulty)),
-      movement(getRandomMovement()) {
+      movement(getRandomMovement(type)) {
   loadTextures();
   textureDead.loadFromFile("Textures/deadduck.png");
   setTexture(m_textures.at(0));
   setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
+
+  std::cout << "Constructed a duck" << std::endl;
 }
 
 Enemy::~Enemy() { delete movement; }
 
 void Enemy::gameTick([[maybe_unused]] float deltaTime) {
   if (m_posX < 0 or m_posX > windowX or m_posY < 0 or m_posY > windowY) {
+    std::cout << "Died to out-of-bounds spawn" << std::endl;
     die();
   }
   if (not dead()) {
     setPosition(movement->getNextPosition(deltaTime));
-    std::cout << getPosition().x << ' ' << getPosition().y << std::endl;
     if (m_health <= 0) {
       die();
       return;
@@ -41,6 +44,7 @@ void Enemy::gameTick([[maybe_unused]] float deltaTime) {
 void Enemy::die() {
   state = State::Dead;
   timeOfDeath = Game::globalTime;
+  host->decreaseEnemyCount();
 }
 
 void Enemy::loadTextures() {
@@ -89,12 +93,11 @@ void Enemy::spawnProjectile() {
 }
 
 Boss::Boss(GameEngine *host, uint16_t startX, uint16_t startY)
-    : Enemy(host, startX, startY), projectileTimeout(200) {
+    : Enemy(host, startX, startY, MovementType::Vertical),
+      projectileTimeout(200) {
   setScale(5, 5);
   setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
   m_health = dataloader.getBossHp(host->gameDifficulty);
-  delete movement;
-  movement = new VerticalMovement(windowX / 2, windowY / 5, 200);
 }
 
 void Boss::gameTick(float deltaTime) {

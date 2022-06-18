@@ -15,7 +15,8 @@ enum class Level : uint8_t { Level1, Level2, Level3, Level4, Level5 };
 
 class Enemy : public GameObject {
 public:
-  explicit Enemy(GameEngine *host, uint16_t startX, uint16_t startY);
+  explicit Enemy(GameEngine *host, uint16_t startX, uint16_t startY,
+                 MovementType type);
   virtual ~Enemy();
   void gameTick(float deltaTime) override;
   void takeDamage(uint16_t dmg) { m_health -= dmg; }

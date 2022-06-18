@@ -28,6 +28,7 @@ public:
   void addText(Game::Text *textObj);
   void enterGameLoop();
 
+  void decreaseEnemyCount() { enemyCount--; }
   sf::Vector2f getPlayerPos() const; // for "homing" missiles
 
   Difficulty const gameDifficulty;
@@ -38,7 +39,7 @@ private:
   void checkLose();
 
   void spawnEnemies();
-  uint8_t phase;
+  int8_t phase;
   uint8_t enemyCount;
 
   bool m_paused;

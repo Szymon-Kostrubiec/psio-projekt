@@ -87,11 +87,11 @@ sf::Vector2f VerticalMovement::getNextPosition(float step) {
   return sf::Vector2f((m_lastX += m_velocity * step), m_lastY);
 }
 
-MovementCalc *getRandomMovement() {
+MovementCalc *getRandomMovement(MovementType const type) {
   auto randomX = randomDouble(spawnableX);
   auto randomY = randomDouble(spawnableY);
-  switch (/*randomInt(3)*/ 3) {
-  case 0: {
+  switch (type) {
+  case MovementType::Circle: {
     auto circle = new Circle(randomX, randomY);
     circle->x0 = randomX;
     circle->y0 = randomY;
@@ -101,11 +101,10 @@ MovementCalc *getRandomMovement() {
     circle->phi = randomDouble(360);
     return circle; // to be deleted in caller
   }
-  case 1:
+  case MovementType::Random:
     return new RandomMovement(randomX, randomY,
                               randomDouble(maxEnemyLinearVel));
-  case 2:
-  case 3: {
+  case MovementType::Sinusoidal: {
     auto sine = new Sinusoidal(randomX, 400, windowX * .1f, windowX * .9f);
     sine->m_sineCoeff = randomDouble(0.015, 0.01);
     sine->m_allCoeff = randomDouble(200, 100);
@@ -113,8 +112,7 @@ MovementCalc *getRandomMovement() {
 
     return sine;
   }
-  default:
-
+  case MovementType::Vertical:
     return new VerticalMovement(
         randomX, randomY,
         randomDouble(maxEnemyLinearVel)); // to be deleted in caller

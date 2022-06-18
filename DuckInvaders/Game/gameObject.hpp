@@ -9,7 +9,7 @@ class GameObject : public sf::Sprite {
 public:
   virtual void gameTick(float deltaTime) = 0;
   virtual ~GameObject() {}
-  bool expired;
+  bool expired = false;
 
 protected:
   GameObject(GameEngine *host, float startPosX, float startPosY)
