@@ -8,12 +8,15 @@ DataLoader const dataloader("ProgramData/data.csv");
 
 GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
                        Difficulty diff, std::string const &heroTex)
-    : gameDifficulty(diff), phase(-1), enemyCount(0), m_paused(false),
+    : gameDifficulty(diff),
+      phase(2),
+      enemyCount(0),
+      m_paused(false),
       m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders"),
-      m_score(0), m_scoreText("Score:\n0", 20, 0, 0),
+      m_score(0),
+      m_scoreText("Score:\n0", 20, 0, 0),
       m_healthText("Health:\n0", 20, 0, 45),
       m_loseText("", 40, windowSizeX / 2, windowSizeY / 2) {
-
   backgroundTexture.loadFromFile("Textures/background.jpg");
   backgroundTexture.setRepeated(true);
   background.setTexture(backgroundTexture);
@@ -51,6 +54,11 @@ void GameEngine::enterGameLoop() {
       }
     }
 
+    // dbg
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+      std::cout << std::to_string(enemyCount) << std::endl;
+    }
+
     cleanup();
     spawnEnemies();
 
@@ -68,14 +76,13 @@ void GameEngine::enterGameLoop() {
     //    std::cout << std::to_string(enemyCount) << std::endl;
 
     checkLose();
-
-    if (not m_paused) {
       // let every game object perform a tick
       for (auto const &obj : m_objects) {
-        obj->gameTick(deltaTime);
+        if (not m_paused) {
+              obj->gameTick(deltaTime);
+        }
         m_window.draw(*obj);
       }
-    }
     // draw every game object
     //    for (auto const &obj : m_objects) {
     //      m_window.draw(*obj);
@@ -106,7 +113,7 @@ void GameEngine::collisionsEngine() {
             m_hero->decreaseHealth(
                 100 + 50 * static_cast<unsigned int>(gameDifficulty));
             m_score += 50 + static_cast<uint>(gameDifficulty) *
-                                50; // after all, the duck did die
+                                50;  // after all, the duck did die
             duck->die();
           } else
             (m_hero->decreaseHealth(10000));
@@ -125,7 +132,7 @@ void GameEngine::collisionsEngine() {
       for (auto const &gameObj : m_objects) {
         if (gameObj->getGlobalBounds().intersects(obj->getGlobalBounds())) {
           if (auto enemy = dynamic_cast<Enemy *>(gameObj.get())) {
-            enemy->decreaseHealth(projectile->damagePotential());
+            enemy->takeDamage(projectile->damagePotential());
             projectile->expired = true;
             m_score += 50 + 50 * static_cast<uint>(gameDifficulty);
             continue;
@@ -148,49 +155,46 @@ void GameEngine::checkLose() {
 
     m_loseText.setString("You lost.\nScore: " + std::to_string(m_score));
 
-    addText(&m_loseText); // display lose text
+    addText(&m_loseText);  // display lose text
   }
 }
 
 void GameEngine::spawnEnemies() {
-
-  if (enemyCount not_eq 0)
-    return;
+  if (enemyCount not_eq 0) return;
 
   phase++;
   std::cout << "Progressed to a new phase " << std::to_string(phase)
             << std::endl;
 
   switch (phase % 3) {
-  case 1:
-  case 0:
-    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
-                                      MovementType::Circle));
-    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
-                                      MovementType::Vertical));
-    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
-                                      MovementType::Vertical));
-    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
-                                      MovementType::Vertical));
-    enemyCount = 4;
-    break;
-    //  case 1:
-    //    //    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY /
-    //    2,
-    //    //                                      MovementType::Circle));
-    //    //    addObject(std::make_shared<Enemy>(this, windowX / 2, windowY /
-    //    2,
-    //    //                                      MovementType::Sinusoidal));
-    //    //    //    addObject(std::make_shared<Enemy>(this, windowX / 2,
-    //    windowY /
-    //    //    2,
-    //    //    // MovementType::Vertical));
-    //    //    enemyCount = 3;
-    //    enemyCount = 2;
-    //    break;
-  case 2:
-    addObject(std::make_shared<Boss>(this, windowX / 2, windowY / 2));
-    enemyCount = 1;
-    break;
+    case 0:
+      addObject(std::make_shared<Enemy>(this, randomInt(windowX / 2),
+                                        randomInt(windowY / 2),
+                                        MovementType::Circle));
+      addObject(std::make_shared<Enemy>(this, randomInt(windowX / 2),
+                                        randomInt(windowY / 2),
+                                        MovementType::Vertical));
+      addObject(std::make_shared<Enemy>(this, randomInt(windowX / 2),
+                                        randomInt(windowY / 2),
+                                        MovementType::Vertical));
+      addObject(std::make_shared<Enemy>(this, randomInt(windowX / 2),
+                                        randomInt(windowY / 2),
+                                        MovementType::Vertical));
+      enemyCount = 4;
+      break;
+    case 1:
+      addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
+                                        MovementType::Circle));
+      addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
+                                        MovementType::Sinusoidal));
+      addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
+                                        MovementType::Vertical));
+      enemyCount = 3;
+      break;
+    case 2:
+      addObject(std::make_shared<Boss>(this, randomInt(windowX / 2),
+                                       randomInt(windowY / 3)));
+      enemyCount = 1;
+      break;
   }
 }

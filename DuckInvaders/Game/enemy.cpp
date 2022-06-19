@@ -10,13 +10,11 @@ Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY,
     : GameObject(host, startX, startY), projectileTimeout(1000),
       lastProjectileFired(0),
       m_health(dataloader.getEnemyHp(host->gameDifficulty)),
-      movement(getRandomMovement(type)) {
+    state(State::Idle1), timeOfDeath(0), movement(getRandomMovement(type)), m_vel(0) {
   loadTextures();
   textureDead.loadFromFile("Textures/deadduck.png");
-  setTexture(m_textures.at(0));
+  setTexture(textureDead);
   setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
-
-  std::cout << "Constructed a duck" << std::endl;
 }
 
 Enemy::~Enemy() { delete movement; }
@@ -58,7 +56,6 @@ void Enemy::loadTextures() {
 
 void Enemy::animate() {
   if (state not_eq State::Dead) {
-    static uint8_t animationClock{1};
 
     if (animationClock % animationFrequency == 0) {
       if (state == State::Idle1)
@@ -94,7 +91,7 @@ void Enemy::spawnProjectile() {
 
 Boss::Boss(GameEngine *host, uint16_t startX, uint16_t startY)
     : Enemy(host, startX, startY, MovementType::Vertical),
-      projectileTimeout(200) {
+    projectileTimeout(200) {
   setScale(5, 5);
   setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
   m_health = dataloader.getBossHp(host->gameDifficulty);

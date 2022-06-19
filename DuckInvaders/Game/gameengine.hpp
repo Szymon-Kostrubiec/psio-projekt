@@ -39,7 +39,7 @@ private:
   void checkLose();
 
   void spawnEnemies();
-  int8_t phase;
+  uint8_t phase;
   uint8_t enemyCount;
 
   bool m_paused;

@@ -22,7 +22,6 @@ public:
   void takeDamage(uint16_t dmg) { m_health -= dmg; }
   void die();
   bool dead() const { return state == State::Dead; }
-  void decreaseHealth(uint16_t amount) { m_health -= amount; }
 
 protected:
   void loadTextures();
@@ -40,6 +39,7 @@ protected:
 
   MovementCalc *movement;
   int16_t m_vel;
+  uint8_t animationClock{0};
 
   friend class EnemyBuilder;
 };

@@ -16,8 +16,6 @@ static std::vector<std::string> splitCsvLine(std::string &src) {
   }
   result.emplace_back(src); // FIXME: bad practices
 
-  //  result.erase(result.begin()); // remove the descriptor
-
   return result;
 }
 
@@ -25,9 +23,9 @@ static std::vector<uint16_t>
 transformVector(std::vector<std::string> const &src) {
 
   std::vector<uint16_t> result;
+  for (auto itr = src.begin(); itr not_eq src.end(); itr++) {
 
-  for (auto const &str : src) {
-    result.emplace_back(std::stoi(str));
+    result.emplace_back(std::stoi(*itr));
   }
   return result;
 }
