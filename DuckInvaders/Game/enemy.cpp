@@ -7,17 +7,21 @@ DataLoader const dataloader("ProgramData/data.csv");
 
 Enemy::Enemy(GameEngine *host, uint16_t startX, uint16_t startY,
              MovementType type)
-    : GameObject(host, startX, startY), projectileTimeout(1000),
+    : GameObject(host, startX, startY),
+      projectileTimeout(1000),
       lastProjectileFired(0),
       m_health(dataloader.getEnemyHp(host->gameDifficulty)),
-    state(State::Idle1), timeOfDeath(0), movement(getRandomMovement(type)), m_vel(0) {
+      state(State::Idle1),
+      timeOfDeath(0),
+      m_movement(getRandomMovement(type)),
+      m_vel(0) {
   loadTextures();
   textureDead.loadFromFile("Textures/deadduck.png");
   setTexture(textureDead);
   setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
 }
 
-Enemy::~Enemy() { delete movement; }
+Enemy::~Enemy() { delete m_movement; }
 
 void Enemy::gameTick([[maybe_unused]] float deltaTime) {
   if (m_posX < 0 or m_posX > windowX or m_posY < 0 or m_posY > windowY) {
@@ -25,7 +29,7 @@ void Enemy::gameTick([[maybe_unused]] float deltaTime) {
     die();
   }
   if (not dead()) {
-    setPosition(movement->getNextPosition(deltaTime));
+    setPosition(m_movement->getNextPosition(deltaTime));
     if (m_health <= 0) {
       die();
       return;
@@ -56,7 +60,6 @@ void Enemy::loadTextures() {
 
 void Enemy::animate() {
   if (state not_eq State::Dead) {
-
     if (animationClock % animationFrequency == 0) {
       if (state == State::Idle1)
         state = State::Idle2;
@@ -72,11 +75,9 @@ void Enemy::animate() {
 }
 
 void Enemy::spawnProjectile() {
-  if (dead())
-    return;
+  if (dead()) return;
 
   if (lastProjectileFired + projectileTimeout < Game::globalTime) {
-
     lastProjectileFired = Game::globalTime;
 
     if (randomDouble(1.0) < projectileChance) {
@@ -89,12 +90,16 @@ void Enemy::spawnProjectile() {
   }
 }
 
-Boss::Boss(GameEngine *host, uint16_t startX, uint16_t startY)
+Boss::Boss(GameEngine *host, uint16_t startX, uint16_t startY,
+           MovementCalc *movement)
     : Enemy(host, startX, startY, MovementType::Vertical),
-    projectileTimeout(200) {
+      projectileTimeout(200) {
   setScale(5, 5);
   setOrigin(getLocalBounds().width / 2, getLocalBounds().height / 2);
   m_health = dataloader.getBossHp(host->gameDifficulty);
+
+  delete m_movement;  // delete the previously allocated object
+  m_movement = movement;
 }
 
 void Boss::gameTick(float deltaTime) {
@@ -106,7 +111,7 @@ void Boss::gameTick(float deltaTime) {
     return;
   }
   if (not dead()) {
-    setPosition(movement->getNextPosition(deltaTime));
+    setPosition(m_movement->getNextPosition(deltaTime));
   }
   if (Game::globalTime > timeOfDeath + 500 and dead()) {
     expired = true;
@@ -116,11 +121,9 @@ void Boss::gameTick(float deltaTime) {
 }
 
 void Boss::spawnProjectile() {
-  if (dead())
-    return;
+  if (dead()) return;
 
   if (lastProjectileFired + projectileTimeout < Game::globalTime) {
-
     lastProjectileFired = Game::globalTime;
 
     if (randomDouble(1.0) < projectileChance) {

@@ -14,6 +14,8 @@ Hero::Hero(GameEngine *host, uint16_t posX, uint16_t posY, uint16_t health,
   m_texture.loadFromFile(playerFileName);
   setTexture(m_texture);
   setScale(10, 10);
+  firingSoundBuffer.loadFromFile("Sounds/pop.wav");
+  firingSound.setBuffer(firingSoundBuffer);
 }
 
 void Hero::gameTick(float deltaTime) {
@@ -54,6 +56,7 @@ void Hero::fire() {
       auto projectile = std::make_shared<Projectile>(
           host, m_posX - 50, m_posY + 30, 0, -600, ProjectileLevel::Level1);
       host->addProjectile(projectile);
+      firingSound.play();
     }
   }
 }

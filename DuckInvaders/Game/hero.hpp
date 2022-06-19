@@ -5,6 +5,7 @@
 #include "managers.h"
 #include "projectile.hpp"
 #include "utility.hpp"
+#include <SFML/Audio.hpp>
 
 enum class Direction { Left, Up, Right };
 
@@ -31,4 +32,6 @@ private:
   static const std::array<sf::IntRect, 3> m_texRects;
   static constexpr uint16_t heroSpeed{300};
   ProjectileLevel m_currentProjectileLevel;
+  sf::SoundBuffer firingSoundBuffer;
+  sf::Sound firingSound;
 };

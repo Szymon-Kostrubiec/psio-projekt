@@ -8,14 +8,17 @@
 #include "utility.hpp"
 
 class MovementCalc {
-public:
+ public:
   explicit MovementCalc(float startX, float startY)
       : m_lastX(startX), m_lastY(startY) {}
 
   virtual ~MovementCalc() {}
   virtual sf::Vector2f getNextPosition(float step) = 0;
+  sf::Vector2f getCurrentPos() {
+    return sf::Vector2f(m_lastX, m_lastY);
+  }  // for checking whether space is free for spawning
 
-protected:
+ protected:
   mutable float m_lastX;
   mutable float m_lastY;
 };
@@ -23,12 +26,12 @@ protected:
 MovementCalc *getRandomMovement(MovementType);
 
 class Ellipse final : public MovementCalc {
-public:
+ public:
   explicit Ellipse(float startX, float startY) : MovementCalc(startX, startY) {}
 
   virtual sf::Vector2f getNextPosition(float step) override final;
 
-private:
+ private:
   bool m_clockwise;
   float a, b, x0, y0;
 
@@ -36,26 +39,26 @@ private:
 };
 
 class Circle final : public MovementCalc {
-public:
+ public:
   virtual sf::Vector2f getNextPosition(float step) override final;
   explicit Circle(float startX, float startY) : MovementCalc(startX, startY) {}
 
-private:
+ private:
   float x0, y0, r;
   float phi;
-  float angularVelocity; // to be initialized by a friend
+  float angularVelocity;  // to be initialized by a friend
 
   friend MovementCalc *getRandomMovement(MovementType);
 };
 
 class Sinusoidal final : public MovementCalc {
-public:
+ public:
   explicit Sinusoidal(float startX, float startY, float xMin, float xMax)
       : MovementCalc(startX, startY), m_xMin(xMin), m_xMax(xMax) {}
 
   virtual sf::Vector2f getNextPosition(float step) override final;
 
-private:
+ private:
   float m_velocity;
   float m_xMin;
   float m_xMax;
@@ -66,26 +69,26 @@ private:
 };
 
 class RandomMovement final : public MovementCalc {
-public:
+ public:
   explicit RandomMovement(float startX, float startY, float velocity)
       : MovementCalc(startX, startY), m_velocity(velocity) {}
 
   virtual sf::Vector2f getNextPosition(float step) override final;
 
-private:
+ private:
   float m_velocity;
 
   friend MovementCalc *getRandomMovement(MovementType);
 };
 
 class VerticalMovement final : public MovementCalc {
-public:
+ public:
   explicit VerticalMovement(float startX, float startY, float velocity)
       : MovementCalc(startX, startY), m_velocity(velocity) {}
 
   virtual sf::Vector2f getNextPosition(float step) override final;
 
-private:
+ private:
   float m_velocity;
 
   friend MovementCalc *getRandomMovement(MovementType);

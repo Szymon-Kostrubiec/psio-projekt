@@ -2,7 +2,7 @@
 
 inline static float radians(float degrees) { return degrees * 3.1415 / 180; }
 
-static constexpr auto spawnableX = windowX * 0.8; // todo: lower bound
+static constexpr auto spawnableX = windowX * 0.8;  // todo: lower bound
 static constexpr auto spawnableY = windowY * 0.6;
 static constexpr auto maxEnemyLinearVel = 200;
 static constexpr auto maxEnemyAngularVel = 90;
@@ -20,7 +20,6 @@ static float estimateIntegral(double startX, double a, double b,
                               double translation);
 
 sf::Vector2f Sinusoidal::getNextPosition(float step) {
-
   if (m_lastX < m_xMin) {
     m_velocity = std::abs(m_velocity);
   } else if (m_lastX > m_xMax) {
@@ -39,7 +38,7 @@ sf::Vector2f Sinusoidal::getNextPosition(float step) {
                               step * m_velocity * 10) /
              10;
   m_lastY = 400 + sineValue(m_lastX, m_allCoeff,
-                            m_sineCoeff); // 400 => window positon offset
+                            m_sineCoeff);  // 400 => window positon offset
 
 #ifdef Verbatim
 
@@ -79,10 +78,8 @@ sf::Vector2f RandomMovement::getNextPosition([[maybe_unused]] float step) {
 }
 
 sf::Vector2f VerticalMovement::getNextPosition(float step) {
-  if (m_lastX < 0)
-    m_velocity = std::abs(m_velocity);
-  if (m_lastX > windowX)
-    m_velocity = -std::abs(m_velocity);
+  if (m_lastX < 0) m_velocity = std::abs(m_velocity);
+  if (m_lastX > windowX) m_velocity = -std::abs(m_velocity);
 
   return sf::Vector2f((m_lastX += m_velocity * step), m_lastY);
 }
@@ -91,36 +88,38 @@ MovementCalc *getRandomMovement(MovementType const type) {
   auto randomX = randomDouble(spawnableX);
   auto randomY = randomDouble(spawnableY);
   switch (type) {
-  case MovementType::Circle: {
-    auto circle = new Circle(randomX, randomY);
-    circle->x0 = randomX;
-    circle->y0 = randomY;
-    circle->r = randomDouble(150);
-    circle->angularVelocity =
-        randomDouble(maxEnemyAngularVel, minEnemyAngularVel);
-    circle->phi = randomDouble(360);
-    return circle; // to be deleted in caller
-  }
-  case MovementType::Random:
-    return new RandomMovement(randomX, randomY,
-                              randomDouble(maxEnemyLinearVel));
-  case MovementType::Sinusoidal: {
-    auto sine = new Sinusoidal(randomX, 400, windowX * .1f, windowX * .9f);
-    sine->m_sineCoeff = randomDouble(0.015, 0.01);
-    sine->m_allCoeff = randomDouble(200, 100);
-    sine->m_velocity = randomDouble(150, 80) * ((randomInt(10) < 5) ? 1 : -1);
+    case MovementType::Circle: {
+      auto circle = new Circle(randomX, randomY);
+      circle->x0 = randomX;
+      circle->y0 = randomY;
+      circle->r = randomDouble(150);
+      circle->angularVelocity =
+          randomDouble(maxEnemyAngularVel, minEnemyAngularVel);
+      circle->phi = randomDouble(360);
+      return circle;  // to be deleted in caller
+    }
+    case MovementType::Random:
+      return new RandomMovement(randomX, randomY,
+                                randomDouble(maxEnemyLinearVel));
+    case MovementType::Sinusoidal: {
+      auto sine = new Sinusoidal(randomX, 400, windowX * .1f, windowX * .9f);
+      sine->m_sineCoeff = randomDouble(0.015, 0.01);
+      sine->m_allCoeff = randomDouble(200, 100);
+      sine->m_velocity = randomDouble(150, 80) * ((randomInt(10) < 5) ? 1 : -1);
 
-    return sine;
+      return sine;
+    }
+    case MovementType::Vertical:
+      return new VerticalMovement(
+          randomX, randomY,
+          randomDouble(maxEnemyLinearVel));  // to be deleted in caller
   }
-  case MovementType::Vertical:
-    return new VerticalMovement(
-        randomX, randomY,
-        randomDouble(maxEnemyLinearVel)); // to be deleted in caller
-  }
+  std::cerr << "Error";
+  return nullptr;  // warning suppresion
 }
 
-static float estimateIntegral(double startX, double a, double b,
-                              double translation) {
+static float estimateIntegral([[maybe_unused]] double startX, double a,
+                              double b, double translation) {
   // function to estimate x, x > startX, satisfying integral ~ translation
   double currentTranslation{0.f};
   double currentX{0.f};
@@ -128,7 +127,6 @@ static float estimateIntegral(double startX, double a, double b,
   // if integrating a < b
   if (translation > 0) {
     while (currentTranslation < translation) {
-
       currentTranslation += integrandValue(currentX, a, b) * increment;
       currentX += increment;
     }
@@ -138,6 +136,6 @@ static float estimateIntegral(double startX, double a, double b,
       currentX -= increment;
     }
   }
-  return currentX; // todo: first x satisfying currentTranslation < translation
-                   // isn't always the closest
+  return currentX;  // todo: first x satisfying currentTranslation < translation
+                    // isn't always the closest
 }

@@ -15,6 +15,7 @@ LIBS += -lsfml-window
 LIBS += -lsfml-system
 
 SOURCES += \
+  Game/Text.cpp \
     Game/dataloader.cpp \
     Game/enemy.cpp \
     Game/gameengine.cpp \

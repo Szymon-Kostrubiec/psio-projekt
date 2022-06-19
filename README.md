@@ -19,3 +19,4 @@ The value of the integral will be estimated using the trapeziod rule.
 2) [Egg](https://opengameart.org/content/egg-item-sprite)
 3) [Spaceship](https://opengameart.org/content/spaceship-1)
 4) [Projectiles](https://opengameart.org/content/pure-projectile-magic-effect)
+5) [Firing sound](https://elements.envato.com/pop-QKTA234?utm_source=mixkit&utm_medium=referral&utm_campaign=elements_mixkit_cs_sfx_tag)

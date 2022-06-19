@@ -9,18 +9,24 @@ DataLoader const dataloader("ProgramData/data.csv");
 GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
                        Difficulty diff, std::string const &heroTex)
     : gameDifficulty(diff),
-      phase(2),
+      phase(255),
       enemyCount(0),
       m_paused(false),
       m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders"),
       m_score(0),
       m_scoreText("Score:\n0", 20, 0, 0),
       m_healthText("Health:\n0", 20, 0, 45),
-      m_loseText("", 40, windowSizeX / 2, windowSizeY / 2) {
+      m_loseText("", 40, windowSizeX / 2, windowSizeY / 2.),
+      m_phaseText(4000, "Welcome", 40, windowX / 2, windowY / 5),
+      gameSpeedMultiplier(1.0f) {
   backgroundTexture.loadFromFile("Textures/background.jpg");
   backgroundTexture.setRepeated(true);
   background.setTexture(backgroundTexture);
   background.setTextureRect(sf::IntRect(0, 0, windowSizeX, windowSizeY));
+  m_scoreText.setPosition(0 + m_phaseText.getLocalBounds().width / 4,
+                          0 + m_phaseText.getLocalBounds().height / 2);
+  m_healthText.setPosition(0 + m_phaseText.getLocalBounds().width / 4,
+                           0 + m_phaseText.getLocalBounds().height * 3 / 2);
 
   m_hero =
       std::make_shared<Hero>(this, windowSizeX / 2, windowSizeY * 0.9f,
@@ -29,6 +35,7 @@ GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
 
   m_textObjects.emplace_back(&m_scoreText);
   m_textObjects.emplace_back(&m_healthText);
+  m_textObjects.emplace_back(&m_phaseText);
 }
 
 void GameEngine::addObject(const std::shared_ptr<GameObject> &newObject) {
@@ -42,8 +49,6 @@ void GameEngine::addText(Game::Text *textObj) {
 void GameEngine::enterGameLoop() {
   sf::Clock fpsClock;
   sf::Clock gameClock;
-
-  // dbg
 
   while (m_window.isOpen()) {
     sf::Event event;
@@ -73,24 +78,19 @@ void GameEngine::enterGameLoop() {
 
     collisionsEngine();
 
-    //    std::cout << std::to_string(enemyCount) << std::endl;
-
     checkLose();
-      // let every game object perform a tick
-      for (auto const &obj : m_objects) {
-        if (not m_paused) {
-              obj->gameTick(deltaTime);
-        }
-        m_window.draw(*obj);
+    // let every game object perform a tick
+    for (auto const &obj : m_objects) {
+      if (not m_paused) {
+        obj->gameTick(deltaTime * gameSpeedMultiplier);
       }
-    // draw every game object
-    //    for (auto const &obj : m_objects) {
-    //      m_window.draw(*obj);
-    //    }
+      m_window.draw(*obj);
+    }
     m_scoreText.setString("Score:\n" + std::to_string(m_score));
     m_healthText.setString("Health:\n" + std::to_string(m_hero->health()));
     // draw every text object
     for (auto const &obj : m_textObjects) {
+      obj->gameTick();
       m_window.draw(*obj);
     }
     m_window.display();
@@ -163,6 +163,14 @@ void GameEngine::spawnEnemies() {
   if (enemyCount not_eq 0) return;
 
   phase++;
+
+  gameSpeedMultiplier *= 1.1f;
+
+  if (phase % 3 < 2 and phase not_eq 0)
+    m_phaseText.addText(2000, "Progressed to a new phase");
+  else if (phase % 3 == 2)
+    m_phaseText.addText(2000, "Brace yourself, there is a boss coming");
+
   std::cout << "Progressed to a new phase " << std::to_string(phase)
             << std::endl;
 
@@ -192,8 +200,20 @@ void GameEngine::spawnEnemies() {
       enemyCount = 3;
       break;
     case 2:
+      MovementCalc *movement;
+      while (true) {
+        movement = getRandomMovement(MovementType::Vertical);
+        auto pos = movement->getCurrentPos();
+        auto result = true;
+        for (auto const &obj : m_objects) {
+          if (obj->getGlobalBounds().contains(pos)) result = false;
+        }
+        if (result) break;
+      }
+
       addObject(std::make_shared<Boss>(this, randomInt(windowX / 2),
-                                       randomInt(windowY / 3)));
+                                       randomInt(windowY / 3), movement));
+
       enemyCount = 1;
       break;
   }
