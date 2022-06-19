@@ -6,9 +6,9 @@ $$ f'(x) = A * b * cos{bx} $$
 
 Given the current position, delta time and velocity, I want to be able to calculate the next position, ensuring constant velocity.
 The length of a polynomial curve is:
-$$ \int_{a}^{b} sqrt{ 1 + [f'(x)^2]}dx $$
+$$ \int_{a}^{b} \sqrt{ 1 + [f'(x)^2]}dx $$
 
-$$ \int_{a}^{b} sqrt{ 1 + A*b*cos(b*x)^2} dx$$
+$$ \int_{a}^{b} \sqrt{ 1 + A*b*cos(b*x)^2} dx$$
 
 The value of the integral will be estimated using the trapeziod rule.
 
