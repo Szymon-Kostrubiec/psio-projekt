@@ -15,7 +15,7 @@ GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
       m_window(sf::VideoMode(windowSizeX, windowSizeY), "Duck invaders"),
       m_score(0),
       m_scoreText("Score:\n0", 20, 0, 0),
-      m_healthText("Health:\n0", 20, 0, 45),
+      m_healthText("Health:\n0", 20, 0, 50),
       m_loseText("", 40, windowSizeX / 2, windowSizeY / 2.),
       m_phaseText(4000, "Welcome", 40, windowX / 2, windowY / 5),
       gameSpeedMultiplier(1.0f) {
@@ -26,7 +26,7 @@ GameEngine::GameEngine(uint16_t windowSizeX, uint16_t windowSizeY,
   m_scoreText.setPosition(0 + m_phaseText.getLocalBounds().width / 4,
                           0 + m_phaseText.getLocalBounds().height / 2);
   m_healthText.setPosition(0 + m_phaseText.getLocalBounds().width / 4,
-                           0 + m_phaseText.getLocalBounds().height * 3 / 2);
+                           0 + m_phaseText.getLocalBounds().height * 4 / 2);
 
   m_hero =
       std::make_shared<Hero>(this, windowSizeX / 2, windowSizeY * 0.9f,
@@ -184,7 +184,7 @@ void GameEngine::spawnEnemies() {
                                         MovementType::Vertical));
       addObject(std::make_shared<Enemy>(this, randomInt(windowX / 2),
                                         randomInt(windowY / 2),
-                                        MovementType::Vertical));
+                                        MovementType::Sinusoidal));
       addObject(std::make_shared<Enemy>(this, randomInt(windowX / 2),
                                         randomInt(windowY / 2),
                                         MovementType::Vertical));
@@ -196,7 +196,7 @@ void GameEngine::spawnEnemies() {
       addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
                                         MovementType::Sinusoidal));
       addObject(std::make_shared<Enemy>(this, windowX / 2, windowY / 2,
-                                        MovementType::Vertical));
+                                        MovementType::Sinusoidal));
       enemyCount = 3;
       break;
     case 2:
@@ -204,11 +204,15 @@ void GameEngine::spawnEnemies() {
       while (true) {
         movement = getRandomMovement(MovementType::Vertical);
         auto pos = movement->getCurrentPos();
+        auto playerRect = sf::FloatRect(pos, sf::Vector2f(50, 50));
         auto result = true;
         for (auto const &obj : m_objects) {
-          if (obj->getGlobalBounds().contains(pos)) result = false;
+          if (obj->getGlobalBounds().intersects(playerRect)) result = false;
         }
-        if (result) break;
+        if (result)
+          break;
+        else
+          delete movement;
       }
 
       addObject(std::make_shared<Boss>(this, randomInt(windowX / 2),

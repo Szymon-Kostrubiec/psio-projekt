@@ -46,7 +46,7 @@ class GameEngine {
 
   std::shared_ptr<Hero> m_hero;
   std::list<std::shared_ptr<GameObject>>
-      m_objects;  // list to support frequent, fast deletions and creations
+      m_objects;  // list to support frequent, fast deletions and insertions
   std::list<Game::Text *> m_textObjects;
   std::list<GameObject *> projectiles;
   sf::RenderWindow m_window;

@@ -55,6 +55,6 @@ class Boss final : public Enemy {
 
  private:
   void spawnProjectile();
-  static constexpr auto projectileChance = 0.6;
+  static constexpr auto projectileChance = 0.4;
   const uint32_t projectileTimeout;
 };

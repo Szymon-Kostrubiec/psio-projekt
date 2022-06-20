@@ -9,7 +9,9 @@ const std::array<sf::IntRect, 3> Hero::m_texRects{
 
 Hero::Hero(GameEngine *host, uint16_t posX, uint16_t posY, uint16_t health,
            const std::string &playerFileName)
-    : GameObject(host, posX, posY), lastFired(0), m_health(health),
+    : GameObject(host, posX, posY),
+      lastFired(0),
+      m_health(health),
       m_currentProjectileLevel(ProjectileLevel::Level1) {
   m_texture.loadFromFile(playerFileName);
   setTexture(m_texture);
@@ -19,7 +21,6 @@ Hero::Hero(GameEngine *host, uint16_t posX, uint16_t posY, uint16_t health,
 }
 
 void Hero::gameTick(float deltaTime) {
-  // todo: taking and receiving shots
   calculateMovement(deltaTime);
   fire();
 }

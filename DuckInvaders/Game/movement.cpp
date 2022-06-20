@@ -2,7 +2,7 @@
 
 inline static float radians(float degrees) { return degrees * 3.1415 / 180; }
 
-static constexpr auto spawnableX = windowX * 0.8;  // todo: lower bound
+static constexpr auto spawnableX = windowX * 0.8;
 static constexpr auto spawnableY = windowY * 0.6;
 static constexpr auto maxEnemyLinearVel = 200;
 static constexpr auto maxEnemyAngularVel = 90;
